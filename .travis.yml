@@ -10,9 +10,6 @@ node_js:
 branches:
   only:
   - master
-cache:
-  directories:
-  - node_modules
 env:
   global:
   - secure: KlV2REwhzQtaRQHccUt/bM9F/PjSwN3ttSvRqrQvcOsstBeJAtjLHC7e81ScP/FUYgTThfG5cSDRdDPrDHf8ZQ+hJ60qWHa5YisNXrt/JpFoSgXiO4wtDuw8oCAFgp8v2tWz95o4d+vdV/mLRZuBzdWKRcTlDGxO9UKO4QAjTUuAODYzXjXMtgtBAu4GeALlw++s7fmqz2Wt+yZAc7lXlcFh8hjfUFC0s94rjJHkYFSK8Unof88t0mczKEfraVl5QTipZCNxY7e5vH75s1n2wMjHtazwDKiDoJxODXMAh7I5XJSQ1A5tbivV2iGXwZ/rLJiRpBkA7wLlADbMO7+dOe7iAHeMHjOmNpNf3NDNjVAAEIlHehBJ1/hlT21oQ0ZOWaioBEB2nq1J3OROzYFihh1uyC3qObqB9og8i7tJI0eCZFXlY2S2evikczP04UX2fq4ztdOCRnH+5yVjjnJ2rSDdIcw9gx+0OXCMy/Oweq7ykL/g5rZPNeafWS+/59p8QMzg5lJ/qlQVzKxoteFLtxd/ePYDExwxI9L80wjvji0M0HQTIgbLHFnZfq2hHTUbRfjIEYCMk0M5bAq3ygZR0ZQZP3TJMCwMKrmxOgyBWRz1zrdaJcg9pVcj+QGpyYjvaroHeizerD1YDjEokPMurMioz4qclVD+4UZ4zm5n5vM=
