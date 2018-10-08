@@ -6,7 +6,7 @@ addons:
     - lftp
 os: linux
 node_js:
-- '10'
+  - "10"
 branches:
   only:
   - master
