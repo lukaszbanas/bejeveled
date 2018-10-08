@@ -8,4 +8,4 @@ abort() {
 [ -z $FTP_USER ] && abort "FTP_USER is undefined"
 
 lftp -u $FTP_USER,$FTP_PASSWORD ftp://s45.linuxpl.com/ \
- -e 'mirror -c -e -R public ~ ; exit'
+ -e 'set ftp:ssl-allow no; mirror -c -e -R public ~ ; exit'
