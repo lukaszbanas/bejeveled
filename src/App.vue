@@ -1,28 +1,34 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Menu v-if="isGameNotRunning === true"/>
+    <Board v-if="isGameNotRunning === false" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Board from './components/Board'
+import Menu from './components/Menu'
+import store from './store'
 
 export default {
   name: 'app',
+  computed: {
+      isGameNotRunning: () => {
+          return store.state.game['running'] === false
+      }
+  },
   components: {
-    HelloWorld
+      Board, Menu
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  .sprite {
+    background: transparent url('./assets/sprites.png') no-repeat top left;
+  }
+
+  body {
+    text-align: center;
+  }
 </style>
