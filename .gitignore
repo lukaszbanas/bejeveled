@@ -131,3 +131,6 @@ typings/
 # Serverless directories
 .serverless
 
+/dist
+.env.local
+.env.*.local
