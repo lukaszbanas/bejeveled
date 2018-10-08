@@ -1,5 +1,7 @@
 # bejeveled
 
+[![Build Status](https://travis-ci.org/lukaszbanas/bejeveled.svg?branch=master)](https://travis-ci.org/lukaszbanas/bejeveled)
+
 ## Project setup
 ```
 npm install
