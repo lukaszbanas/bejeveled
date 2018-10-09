@@ -1,4 +1,5 @@
-const M_START_NEW = 'new'
+const
+    M_START_NEW = 'new'
 
 const state = {
     running: false
@@ -13,7 +14,7 @@ const getters = {
 const mutations = {
     [M_START_NEW] (state) {
         state.running = true
-    }
+    },
 }
 
 const actions = {
