@@ -3,7 +3,8 @@ import Area from '../../classes/Area'
 import Gem from '../../classes/Gem'
 
 const M_GENERATE = 'generate',
-    M_CHECK_BOARD = 'check_board'
+    M_CHECK_BOARD = 'check_board',
+    M_RESET_POINTS_GAINED = 'reset_points_gained'
 
 const CONFIG_ANIMATION_SPEED = 300
 
@@ -11,7 +12,8 @@ const state = {
     board: [],
     rows: 0,
     cols: 0,
-    canMakeMove: true
+    canMakeMove: true,
+    pointsGained: 0
 }
 
 const getters = {
@@ -54,21 +56,17 @@ const mutations = {
                         foundColWithAction = true
                     }
 
-                    matches = state.board[row][col].getMatch(state.board, 'x')
+                    ['x', 'y'].forEach(direction => {
+                        matches = state.board[row][col].getMatch(state.board, direction)
 
-                    if (matches.length > 2) {
-                        matches.forEach(match => {
-                            state.board[match.y][match.x].removeGem()
-                        })
-                    }
+                        if (matches.length > 2) {
+                            state.pointsGained += matches.length
 
-                    matches = state.board[row][col].getMatch(state.board, 'y')
-
-                    if (matches.length > 2) {
-                        matches.forEach(match => {
-                            state.board[match.y][match.x].removeGem()
-                        })
-                    }
+                            matches.forEach(match => {
+                                state.board[match.y][match.x].removeGem()
+                            })
+                        }
+                    })
                 }
             }
 
@@ -80,6 +78,9 @@ const mutations = {
         }
 
         state.canMakeMove = true
+    },
+    [M_RESET_POINTS_GAINED] (state) {
+        state.pointsGained = 0
     }
 }
 
@@ -88,14 +89,20 @@ const actions = {
         commit(M_GENERATE, {rows: 10, cols: 10});
     },
     makeMove: ({ commit }, positions) => {
-        let gem1 = state.board[positions.first.y][positions.first.x].getGem(),
-            gem2 = state.board[positions.second.y][positions.second.x].getGem()
+        return new Promise((resolve) => {
+            commit(M_RESET_POINTS_GAINED)
 
-        state.board[positions.first.y][positions.first.x].setGem(gem2)
-        state.board[positions.second.y][positions.second.x].setGem(gem1)
+            let gem1 = state.board[positions.first.y][positions.first.x].getGem(),
+                gem2 = state.board[positions.second.y][positions.second.x].getGem()
 
-        saveBoardToState(state)
-        commit(M_CHECK_BOARD)
+            state.board[positions.first.y][positions.first.x].setGem(gem2)
+            state.board[positions.second.y][positions.second.x].setGem(gem1)
+
+            saveBoardToState(state)
+            commit(M_CHECK_BOARD)
+
+            resolve()
+        })
     }
 }
 
