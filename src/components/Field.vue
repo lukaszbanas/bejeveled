@@ -53,8 +53,9 @@
                             x: direction === 'right' ? this.position.x + 1 : direction === 'left' ? this.position.x - 1 : this.position.x,
                             y: direction === 'top' ? this.position.y - 1 : direction === 'bottom' ? this.position.y + 1 : this.position.y,
                         }
+                    }).then(() => {
+                        store.dispatch('game/addScore', store.state.board.pointsGained)
                     })
-                    store.dispatch('game/addScore', store.state.board.pointsGained)
                     //     .then(
                     //     () => {
                     //         store.dispatch('game/addScore', store.state.board.pointsGained)
