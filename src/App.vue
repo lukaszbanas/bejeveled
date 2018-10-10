@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Menu v-if="isGameNotRunning === true"/>
-    <div v-if="isGameNotRunning === false">
+    <div class="game-container mdl-grid" v-if="isGameNotRunning === false">
       <Scoreboard :score="$store.state.game.score" />
       <Board />
     </div>
@@ -27,12 +27,16 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
   .sprite {
     background: transparent url('./assets/sprites.png') no-repeat top left;
   }
 
   body {
     text-align: center;
+  }
+
+  .game-container {
+    width: 100vw;
   }
 </style>
