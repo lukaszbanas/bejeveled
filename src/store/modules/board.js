@@ -5,6 +5,7 @@ import Gem from '../../classes/Gem'
 const M_GENERATE = 'generate',
     M_DROP_FIELDS = 'drop_fields',
     M_CHECK_BOARD = 'check_board',
+    M_REMOVE_GEMS = 'remove_gems',
     M_PREPARE_BOARD_FOR_MOVE = 'prepare_board_for_move',
     M_CLEANUP_BOARD_AFTER_MOVE = 'cleanup_board_after_move',
     M_MAKE_MOVE = 'make_move'
@@ -17,11 +18,11 @@ const state = {
     cols: 0,
     canMakeMove: true,
     pointsGained: 0,
-    emptyFields: 0
+    gemsToRemove: []
 }
 
 const getters = {
-    hasEmptyFields: () => {
+    hasEmptyFields: (state) => {
         let col, row, gems = 0
 
         for (col = state.cols - 1; col >= 0; col--) {
@@ -33,6 +34,16 @@ const getters = {
         }
 
         return gems !== (state.rows * state.cols)
+    },
+    isPositionContainsGemToRemove: (state) => (position) => {
+        return typeof state.gemsToRemove.find( (match) => {
+            return match.x === position.x && match.y === position.y
+        }) !== 'undefined'
+    },
+    hasGemBelow: (state) => (position) => {
+        return typeof state.board[position.y + 1] !== 'undefined' &&
+            typeof state.board[position.y + 1][position.x] !== 'undefined' &&
+            state.board[position.y + 1][position.x].getGem() === null
     }
 }
 
@@ -78,6 +89,8 @@ const mutations = {
     [M_CHECK_BOARD] (state) {
         let row, col, matches
 
+        state.gemsToRemove = []
+
         for (col = state.cols - 1; col >= 0; col--) {
             for (row = state.rows - 1; row >= 0; row--) {
                 ['x', 'y'].forEach(direction => {
@@ -87,13 +100,17 @@ const mutations = {
                         state.pointsGained += matches.length
 
                         matches.forEach(match => {
-                            state.board[match.y][match.x].removeGem()
-                            state.emptyFields ++
+                            state.gemsToRemove.push(match)
                         })
                     }
                 })
             }
         }
+    },
+    [M_REMOVE_GEMS] (state) {
+        state.gemsToRemove.forEach(match => {
+            state.board[match.y][match.x].removeGem()
+        })
     },
     [M_MAKE_MOVE] (state, payload) {
         let gem1 = state.board[payload.first.y][payload.first.x].getGem(),
@@ -124,13 +141,15 @@ const actions = {
     checkBoard: async ({ commit }) => {
         commit(M_CHECK_BOARD)
         await wait(CONFIG_ANIMATION_SPEED)
+        commit(M_REMOVE_GEMS)
+
     },
     makeMove: async ({ commit, dispatch }, positions) => {
         commit(M_PREPARE_BOARD_FOR_MOVE)
         commit(M_MAKE_MOVE, positions)
         await dispatch('checkBoard')
 
-        while (getters.hasEmptyFields()) {
+        while (getters.hasEmptyFields(state)) {
             await dispatch('dropFields')
             await dispatch('checkBoard')
 
