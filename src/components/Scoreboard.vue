@@ -3,6 +3,13 @@
         <div class="scoreboard sprite mdl-cell mdl-cell--4-col">
             <span>{{ score }}</span>
         </div>
+        <div class="matched-gems-counter-container">
+            <div class="matched-gem-counter">{{ matched_first }}</div>
+            <div class="matched-gem-counter">{{ matched_second }}</div>
+            <div class="matched-gem-counter">{{ matched_third }}</div>
+            <div class="matched-gem-counter">{{ matched_fourth }}</div>
+            <div class="matched-gem-counter">{{ matched_fifth }}</div>
+        </div>
     </div>
 </template>
 
@@ -10,7 +17,12 @@
     export default {
         name: 'Scoreboard',
         props: {
-            score: 0
+            score: 0,
+            matched_first: 0,
+            matched_second: 0,
+            matched_third: 0,
+            matched_fourth: 0,
+            matched_fifth: 0
         },
     }
 </script>

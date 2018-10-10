@@ -2,7 +2,14 @@
   <div id="app">
     <Menu v-if="isGameNotRunning === true"/>
     <div class="game-container mdl-grid" v-if="isGameNotRunning === false">
-      <Scoreboard :score="$store.state.game.score" />
+      <Scoreboard
+          :score="$store.state.game.score"
+          :matched_first="$store.state.board.matchedGems[1]"
+          :matched_second="$store.state.board.matchedGems[2]"
+          :matched_third="$store.state.board.matchedGems[3]"
+          :matched_fourth="$store.state.board.matchedGems[4]"
+          :matched_fifth="$store.state.board.matchedGems[5]"
+      />
       <Board />
     </div>
   </div>

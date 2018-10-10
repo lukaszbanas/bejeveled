@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Area from '../../classes/Area'
 import Gem from '../../classes/Gem'
+import { GameTarget, GAME_TARGET_TYPE_1 } from '../../classes/GameTarget'
 
 const M_GENERATE = 'generate',
     M_DROP_FIELDS = 'drop_fields',
@@ -9,7 +10,8 @@ const M_GENERATE = 'generate',
     M_PREPARE_BOARD_FOR_MOVE = 'prepare_board_for_move',
     M_CLEANUP_BOARD_AFTER_MOVE = 'cleanup_board_after_move',
     M_MAKE_MOVE = 'make_move',
-    M_CLICK_AT = 'click_at'
+    M_CLICK_AT = 'click_at',
+    M_SET_GAME_TARGET = 'set_game_target'
 
 const CONFIG_ANIMATION_SPEED = 200
 
@@ -20,7 +22,15 @@ const state = {
     canMakeMove: true,
     pointsGained: 0,
     gemsToRemove: [],
-    clickedArea: null
+    clickedArea: null,
+    matchedGems: {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0
+    },
+    gameTarget: null
 }
 
 const getters = {
@@ -55,6 +65,9 @@ const getters = {
     },
     isClickedArea: (state) => (position) => {
         return state.clickedArea !== null && state.clickedArea.x === position.x && state.clickedArea.y === position.y
+    },
+    getGameTarget: (state) => {
+        return state.gameTarget
     }
 }
 
@@ -120,6 +133,10 @@ const mutations = {
     },
     [M_REMOVE_GEMS] (state) {
         state.gemsToRemove.forEach(match => {
+            if (state.board[match.y][match.x].getGem() !== null) {
+                state.matchedGems[state.board[match.y][match.x].getGemType()]++
+            }
+
             state.board[match.y][match.x].removeGem()
         })
     },
@@ -143,12 +160,16 @@ const mutations = {
     },
     [M_CLICK_AT] (state, payload) {
         state.clickedArea = payload
+    },
+    [M_SET_GAME_TARGET] (state, payload) {
+        state.gameTarget = payload
     }
 }
 
 const actions = {
     generate: ({ commit }) => {
-        commit(M_GENERATE, {rows: 10, cols: 10});
+        commit(M_GENERATE, {rows: 10, cols: 10})
+        commit(M_SET_GAME_TARGET, new GameTarget(GAME_TARGET_TYPE_1, {1: 10, 2: 50, 3: 30}))
     },
     dropFields: async ({ commit }) => {
         commit(M_DROP_FIELDS)
