@@ -28,7 +28,7 @@
             }
         },
         methods: {
-            handleDrop (event) {
+            async handleDrop (event) {
                 if (store.state.board.canMakeMove !== true ) {
                     return
                 }
@@ -47,13 +47,20 @@
                 }
 
                 if (typeof store.state.board.board[target.y] !== 'undefined' && typeof store.state.board.board[target.y][target.x] !== 'undefined') {
-                    store.dispatch('board/makeMove', {
+                    await store.dispatch('board/makeMove', {
                         'first': this.position,
                         'second': {
                             x: direction === 'right' ? this.position.x + 1 : direction === 'left' ? this.position.x - 1 : this.position.x,
                             y: direction === 'top' ? this.position.y - 1 : direction === 'bottom' ? this.position.y + 1 : this.position.y,
                         }
-                    });
+                    }).then(() => {
+                        store.dispatch('game/addScore', store.state.board.pointsGained)
+                    })
+                    //     .then(
+                    //     () => {
+                    //         store.dispatch('game/addScore', store.state.board.pointsGained)
+                    //     }
+                    // );
                 }
             }
         }
