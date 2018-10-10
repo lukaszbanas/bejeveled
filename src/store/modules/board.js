@@ -8,7 +8,8 @@ const M_GENERATE = 'generate',
     M_REMOVE_GEMS = 'remove_gems',
     M_PREPARE_BOARD_FOR_MOVE = 'prepare_board_for_move',
     M_CLEANUP_BOARD_AFTER_MOVE = 'cleanup_board_after_move',
-    M_MAKE_MOVE = 'make_move'
+    M_MAKE_MOVE = 'make_move',
+    M_CLICK_AT = 'click_at'
 
 const CONFIG_ANIMATION_SPEED = 200
 
@@ -18,7 +19,8 @@ const state = {
     cols: 0,
     canMakeMove: true,
     pointsGained: 0,
-    gemsToRemove: []
+    gemsToRemove: [],
+    clickedArea: null
 }
 
 const getters = {
@@ -44,6 +46,15 @@ const getters = {
         return typeof state.board[position.y + 1] !== 'undefined' &&
             typeof state.board[position.y + 1][position.x] !== 'undefined' &&
             state.board[position.y + 1][position.x].getGem() === null
+    },
+    hasClickedArea: (state) => {
+        return state.clickedArea !== null
+    },
+    getClickedArea: (state) => {
+        return state.clickedArea
+    },
+    isClickedArea: (state) => (position) => {
+        return state.clickedArea !== null && state.clickedArea.x === position.x && state.clickedArea.y === position.y
     }
 }
 
@@ -125,9 +136,13 @@ const mutations = {
         state.pointsGained = 0
         state.emptyFields = 0
         state.canMakeMove = false
+        state.clickedArea = null
     },
     [M_CLEANUP_BOARD_AFTER_MOVE] (state) {
         state.canMakeMove = true
+    },
+    [M_CLICK_AT] (state, payload) {
+        state.clickedArea = payload
     }
 }
 
@@ -156,6 +171,9 @@ const actions = {
         }
 
         commit(M_CLEANUP_BOARD_AFTER_MOVE)
+    },
+    clickAtArea: ({ commit }, position) => {
+        commit(M_CLICK_AT, position)
     }
 }
 
