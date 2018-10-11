@@ -10,7 +10,7 @@ class ScoreGameTarget extends GameTarget {
     }
 
     isSatisfied(params) {
-        return params.score === this.getScore()
+        return params.score >= this.getScore()
     }
 }
 
