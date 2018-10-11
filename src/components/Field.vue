@@ -40,49 +40,20 @@
                     let possibleX = [this.position.x - 1, this.position.x, this.position.x + 1],
                         possibleY = [this.position.y - 1, this.position.y, this.position.y + 1]
 
-                    if (possibleX.indexOf(this.$store.getters['board/getClickedArea'].x) < 0 || possibleY.indexOf(this.$store.getters['board/getClickedArea'].y) < 0) {
+                    if ((possibleX.indexOf(this.$store.getters['board/getClickedArea'].x) >= 0 && this.$store.getters['board/getClickedArea'].y === this.position.y) ||
+                        (possibleY.indexOf(this.$store.getters['board/getClickedArea'].y) >= 0 && this.$store.getters['board/getClickedArea'].x === this.position.x)) {
+                        await store.dispatch('board/makeMove', {
+                            'first': this.$store.getters['board/getClickedArea'],
+                            'second': this.position
+                        }).then(() => {
+                            store.dispatch('game/addScore', store.state.board.pointsGained)
+                        })
+                    } else {
                         store.dispatch('board/clickAtArea', null)
                         return
                     }
-
-                    await store.dispatch('board/makeMove', {
-                        'first': this.$store.getters['board/getClickedArea'],
-                        'second': this.position
-                    }).then(() => {
-                        store.dispatch('game/addScore', store.state.board.pointsGained)
-                    })
                 } else {
                     store.dispatch('board/clickAtArea', this.position)
-                }
-            },
-            async handleDrop (event) {
-                if (store.state.board.canMakeMove !== true ) {
-                    return
-                }
-
-                let target, direction = 'right';
-
-                if (event.offsetX * event.offsetX > event.offsetY * event.offsetY) {
-                    direction = (event.offsetX > 0) ? 'right' : 'left'
-                } else {
-                    direction = (event.offsetY < 0) ? 'top' : 'bottom'
-                }
-
-                target = {
-                    x: direction === 'right' ? this.position.x + 1 : direction === 'left' ? this.position.x - 1 : this.position.x,
-                    y: direction === 'top' ? this.position.y - 1 : direction === 'bottom' ? this.position.y + 1 : this.position.y,
-                }
-
-                if (typeof store.state.board.board[target.y] !== 'undefined' && typeof store.state.board.board[target.y][target.x] !== 'undefined') {
-                    await store.dispatch('board/makeMove', {
-                        'first': this.position,
-                        'second': {
-                            x: direction === 'right' ? this.position.x + 1 : direction === 'left' ? this.position.x - 1 : this.position.x,
-                            y: direction === 'top' ? this.position.y - 1 : direction === 'bottom' ? this.position.y + 1 : this.position.y,
-                        }
-                    }).then(() => {
-                        store.dispatch('game/addScore', store.state.board.pointsGained)
-                    })
                 }
             }
         }
