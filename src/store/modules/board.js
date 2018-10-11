@@ -204,7 +204,6 @@ const actions = {
         await dispatch('checkBoard', CONFIG_ANIMATION_SPEED)
 
         while (getters.hasEmptyFields(state)) {
-            debugger
             await dispatch('dropFields')
             await dispatch('checkBoard', CONFIG_ANIMATION_SPEED)
         }
