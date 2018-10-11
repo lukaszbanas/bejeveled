@@ -1,22 +1,15 @@
 <template>
   <div id="app">
     <Menu v-if="isGameNotRunning === true"/>
-    <div v-if="!isGameEnded">
+    <div v-if="!isGameCompleted && !isLvlFailed">
       <div class="game-container mdl-grid" v-if="isGameNotRunning === false">
-        <Scoreboard
-                :score="$store.state.progress.score"
-                :matched_first="$store.state.board.matchedGems[1]"
-                :matched_second="$store.state.board.matchedGems[2]"
-                :matched_third="$store.state.board.matchedGems[3]"
-                :matched_fourth="$store.state.board.matchedGems[4]"
-                :matched_fifth="$store.state.board.matchedGems[5]"
-                :game_type="$store.state.board.gameTarget"
-        />
+        <LeftPanel />
         <Board />
         <LevelCompletedDialog v-if="isLvlFinished" />
       </div>
     </div>
-    <div v-if="isGameEnded">
+
+    <div v-if="isGameCompleted || isLvlFailed">
       Thanks for playing! You scored <span>{{ totalPoints }}</span>!
     </div>
   </div>
@@ -27,6 +20,7 @@ import Board from './components/Board'
 import Menu from './components/Menu'
 import Scoreboard from './components/Scoreboard'
 import LevelCompletedDialog from './components/LevelCompletedDialog'
+import LeftPanel from './components/LeftPanel'
 import store from './store'
 
 export default {
@@ -36,9 +30,12 @@ export default {
           return store.state.game['running'] === false
       },
       isLvlFinished: () => {
-          return store.state.game['finished'] === true
+          return store.state.game['finished'] === true && store.state.game['failed'] === false
       },
-      isGameEnded: () => {
+      isLvlFailed: () => {
+          return store.state.game['finished'] === true && store.state.game['failed'] === true
+      },
+      isGameCompleted: () => {
           return store.state.progress['gameEnded'] === true
       },
       totalPoints: () => {
@@ -46,7 +43,7 @@ export default {
       }
   },
   components: {
-      Board, Menu, Scoreboard, LevelCompletedDialog
+      Board, Menu, Scoreboard, LevelCompletedDialog, LeftPanel
   }
 }
 </script>

@@ -42,10 +42,24 @@
 
                     if ((possibleX.indexOf(this.$store.getters['board/getClickedArea'].x) >= 0 && this.$store.getters['board/getClickedArea'].y === this.position.y) ||
                         (possibleY.indexOf(this.$store.getters['board/getClickedArea'].y) >= 0 && this.$store.getters['board/getClickedArea'].x === this.position.x)) {
+
+                        //clicked area is cleared ad makeMove action, store it for revert
+                        let lastClickedArea = this.$store.getters['board/getClickedArea']
+
                         await store.dispatch('board/makeMove', {
                             'first': this.$store.getters['board/getClickedArea'],
                             'second': this.position
-                        })
+                        }).then(
+                            async () => {
+                                //success
+                            },
+                            async () => {
+                                await store.dispatch('board/revertMove', {
+                                    'first': this.position,
+                                    'second': lastClickedArea
+                                })
+                            }
+                        )
                     } else {
                         store.dispatch('board/clickAtArea', null)
                         return

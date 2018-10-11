@@ -1,5 +1,6 @@
 {
   "type": "MatchGemsGameTarget",
+  "moves": 7,
   "props": {
     "1": 9,
     "2": 9,

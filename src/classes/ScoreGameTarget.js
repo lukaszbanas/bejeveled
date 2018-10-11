@@ -1,8 +1,8 @@
 import {GameTarget} from './GameTarget'
 
 class ScoreGameTarget extends GameTarget {
-    constructor (params) {
-        super(params)
+    constructor (params, moves) {
+        super(params, moves)
     }
 
     getScore () {
