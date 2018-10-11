@@ -1,5 +1,5 @@
 <template>
-    <div class="fields-container">
+    <div class="fields-container mdl-cell mdl-cell--4-col">
         <div class="fields-row" :key="'k' + row" v-for="row in $store.state.board.rows">
             <div class="fields-col sprite" :key="'c' + col" v-for="col in $store.state.board.cols">
                 <Field :key="'k' + row + 'c' + col"
@@ -25,6 +25,7 @@
 <style scoped>
     .fields-container {
         display: inline-block;
+        width: 750px;
     }
 
     .fields-row {
