@@ -12,7 +12,8 @@ const M_GENERATE = 'generate',
     M_CLEANUP_BOARD_AFTER_MOVE = 'cleanup_board_after_move',
     M_MAKE_MOVE = 'make_move',
     M_CLICK_AT = 'click_at',
-    M_SET_GAME_TARGET = 'set_game_target'
+    M_SET_GAME_TARGET = 'set_game_target',
+    M_MARK_BOARD_AS_PREPARED = 'mark_board_as_prepared'
 
 const CONFIG_ANIMATION_SPEED = 200
 
@@ -20,6 +21,7 @@ const state = {
     board: [],
     rows: 0,
     cols: 0,
+    boardPrepared: false,
     canMakeMove: true,
     pointsGained: 0,
     gemsToRemove: [],
@@ -122,7 +124,9 @@ const mutations = {
                     matches = state.board[row][col].getMatch(state.board, direction)
 
                     if (matches.length > 2) {
-                        state.pointsGained += matches.length
+                        if (state.boardPrepared) {
+                            state.pointsGained += matches.length
+                        }
 
                         matches.forEach(match => {
                             state.gemsToRemove.push(match)
@@ -134,7 +138,7 @@ const mutations = {
     },
     [M_REMOVE_GEMS] (state) {
         state.gemsToRemove.forEach(match => {
-            if (state.board[match.y][match.x].getGem() !== null) {
+            if (state.board[match.y][match.x].getGem() !== null && state.boardPrepared) {
                 state.matchedGems[state.board[match.y][match.x].getGemType()]++
             }
 
@@ -164,31 +168,43 @@ const mutations = {
     },
     [M_SET_GAME_TARGET] (state, payload) {
         state.gameTarget = payload
+    },
+    [M_MARK_BOARD_AS_PREPARED] (state) {
+        state.boardPrepared = true
     }
 }
 
 const actions = {
-    generate: async ({ commit }) => {
+    generate: async ({ commit, dispatch }) => {
         commit(M_GENERATE, {rows: 10, cols: 10})
         commit(M_SET_GAME_TARGET, await getLvlTarget(1))
+
+        await dispatch('checkBoard', 0)
+
+        while (getters.hasEmptyFields(state)) {
+            await dispatch('dropFields')
+            await dispatch('checkBoard', 0)
+        }
+
+        commit(M_MARK_BOARD_AS_PREPARED)
     },
     dropFields: async ({ commit }) => {
         commit(M_DROP_FIELDS)
     },
-    checkBoard: async ({ commit }) => {
+    checkBoard: async ({ commit }, animationSpeed) => {
         commit(M_CHECK_BOARD)
-        await wait(CONFIG_ANIMATION_SPEED)
+        await wait(animationSpeed)
         commit(M_REMOVE_GEMS)
 
     },
     makeMove: async ({ commit, dispatch, rootState }, positions) => {
         commit(M_PREPARE_BOARD_FOR_MOVE)
         commit(M_MAKE_MOVE, positions)
-        await dispatch('checkBoard')
+        await dispatch('checkBoard', CONFIG_ANIMATION_SPEED)
 
         while (getters.hasEmptyFields(state)) {
             await dispatch('dropFields')
-            await dispatch('checkBoard')
+            await dispatch('checkBoard', CONFIG_ANIMATION_SPEED)
         }
 
         commit(M_CLEANUP_BOARD_AFTER_MOVE)
