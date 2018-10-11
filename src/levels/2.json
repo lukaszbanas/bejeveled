@@ -1,0 +1,6 @@
+{
+  "type": "ScoreGameTarget",
+  "props": {
+    "score": 100
+  }
+}
