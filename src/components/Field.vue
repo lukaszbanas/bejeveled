@@ -45,8 +45,6 @@
                         await store.dispatch('board/makeMove', {
                             'first': this.$store.getters['board/getClickedArea'],
                             'second': this.position
-                        }).then(() => {
-                            store.dispatch('game/addScore', store.state.board.pointsGained)
                         })
                     } else {
                         store.dispatch('board/clickAtArea', null)

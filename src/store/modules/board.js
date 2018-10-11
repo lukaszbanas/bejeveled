@@ -33,7 +33,8 @@ const state = {
         4: 0,
         5: 0
     },
-    gameTarget: null
+    gameTarget: null,
+    currentLevel: 1
 }
 
 const getters = {
@@ -177,7 +178,7 @@ const mutations = {
 const actions = {
     generate: async ({ commit, dispatch }) => {
         commit(M_GENERATE, {rows: 10, cols: 10})
-        commit(M_SET_GAME_TARGET, await getLvlTarget(1))
+        commit(M_SET_GAME_TARGET, await getLvlTarget(state.currentLevel))
 
         await dispatch('checkBoard', 0)
 
@@ -203,11 +204,13 @@ const actions = {
         await dispatch('checkBoard', CONFIG_ANIMATION_SPEED)
 
         while (getters.hasEmptyFields(state)) {
+            debugger
             await dispatch('dropFields')
             await dispatch('checkBoard', CONFIG_ANIMATION_SPEED)
         }
 
         commit(M_CLEANUP_BOARD_AFTER_MOVE)
+        dispatch('game/addScore', state.pointsGained, {root: true})
 
         if (state.gameTarget.isSatisfied({
             'score': rootState.game.score,
@@ -218,6 +221,7 @@ const actions = {
             'match-type-5': state.matchedGems[5]
         })) {
             dispatch('game/finishLevel', null, {root: true})
+            dispatch('progress/save', null, {root: true})
         }
     },
     clickAtArea: ({ commit }, position) => {
