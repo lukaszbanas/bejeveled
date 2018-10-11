@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 class GameTarget {
-    constructor (params) {
+    constructor (params, moves) {
         this.target = params
+        this.movesLimit = moves
     }
 
     getTarget () {
@@ -10,6 +11,10 @@ class GameTarget {
 
     isSatisfied (params) {
         throw new Error('Implementation is required');
+    }
+
+    getMovesLimit () {
+        return this.movesLimit
     }
 }
 

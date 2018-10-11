@@ -1,0 +1,8 @@
+{
+  "type": "MatchGemsGameTarget",
+  "moves": 5,
+  "props": {
+    "3": 15,
+    "4": 6
+  }
+}

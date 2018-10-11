@@ -1,5 +1,6 @@
 {
   "type": "ScoreGameTarget",
+  "moves": 10,
   "props": {
     "score": 100
   }

@@ -3,6 +3,7 @@ import Area from '../../classes/Area'
 import Gem from '../../classes/Gem'
 import MatchGemsGameTarget from '../../classes/MatchGemsGameTarget'
 import ScoreGameTarget from '../../classes/ScoreGameTarget'
+import {GameTarget} from '../../classes/GameTarget'
 
 const M_GENERATE = 'generate',
     M_DROP_FIELDS = 'drop_fields',
@@ -13,7 +14,10 @@ const M_GENERATE = 'generate',
     M_MAKE_MOVE = 'make_move',
     M_CLICK_AT = 'click_at',
     M_SET_GAME_TARGET = 'set_game_target',
-    M_MARK_BOARD_AS_PREPARED = 'mark_board_as_prepared'
+    M_MARK_BOARD_AS_PREPARED = 'mark_board_as_prepared',
+    M_SET_LEVEL = 'set_level',
+    M_SET_MOVES_LIMIT = 'set_moves_limit',
+    M_ADD_MOVE = 'add_move'
 
 const CONFIG_ANIMATION_SPEED = 200
 
@@ -33,7 +37,9 @@ const state = {
         4: 0,
         5: 0
     },
-    gameTarget: null
+    gameTarget: null,
+    currentLevel: 1,
+    currentMove: 0
 }
 
 const getters = {
@@ -71,6 +77,13 @@ const getters = {
     },
     getGameTarget: (state) => {
         return state.gameTarget
+    },
+    getMovesLeft: (state) => {
+        try {
+            return state.gameTarget.getMovesLimit() - state.currentMove
+        } catch (e) {
+            return 0
+        }
     }
 }
 
@@ -113,7 +126,7 @@ const mutations = {
 
         saveBoardToState(state)
     },
-    [M_CHECK_BOARD] (state) {
+    [M_CHECK_BOARD] (state, addPoints) {
         let row, col, matches
 
         state.gemsToRemove = []
@@ -124,7 +137,7 @@ const mutations = {
                     matches = state.board[row][col].getMatch(state.board, direction)
 
                     if (matches.length > 2) {
-                        if (state.boardPrepared) {
+                        if (state.boardPrepared && addPoints) {
                             state.pointsGained += matches.length
                         }
 
@@ -171,13 +184,30 @@ const mutations = {
     },
     [M_MARK_BOARD_AS_PREPARED] (state) {
         state.boardPrepared = true
+        state.currentMove = 0
+        state.matchedGems = {
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0,
+            5: 0
+        }
+    },
+    [M_SET_LEVEL] (state, payload) {
+        state.currentLevel = payload
+    },
+    [M_SET_MOVES_LIMIT] (state, payload) {
+        state.movesLimit = payload
+    },
+    [M_ADD_MOVE] (state) {
+        state.currentMove += 1
     }
 }
 
 const actions = {
     generate: async ({ commit, dispatch }) => {
         commit(M_GENERATE, {rows: 10, cols: 10})
-        commit(M_SET_GAME_TARGET, await getLvlTarget(1))
+        commit(M_SET_GAME_TARGET, await getLvlTarget(state.currentLevel))
 
         await dispatch('checkBoard', 0)
 
@@ -188,37 +218,65 @@ const actions = {
 
         commit(M_MARK_BOARD_AS_PREPARED)
     },
+    setLevel: async ({ commit, dispatch }, level) => {
+        commit(M_SET_LEVEL, level)
+        dispatch('generate')
+    },
     dropFields: async ({ commit }) => {
         commit(M_DROP_FIELDS)
     },
     checkBoard: async ({ commit }, animationSpeed) => {
-        commit(M_CHECK_BOARD)
+        commit(M_CHECK_BOARD, true)
         await wait(animationSpeed)
         commit(M_REMOVE_GEMS)
 
     },
-    makeMove: async ({ commit, dispatch, rootState }, positions) => {
-        commit(M_PREPARE_BOARD_FOR_MOVE)
+    revertMove: ({ commit }, positions) => {
         commit(M_MAKE_MOVE, positions)
-        await dispatch('checkBoard', CONFIG_ANIMATION_SPEED)
+    },
+    makeMove: async ({ commit, dispatch, rootState }, positions) => {
+        return new Promise(async (resolve, reject) => {
+            commit(M_PREPARE_BOARD_FOR_MOVE)
+            commit(M_MAKE_MOVE, positions)
 
-        while (getters.hasEmptyFields(state)) {
-            await dispatch('dropFields')
+            //checking if move is possible
+            commit(M_CHECK_BOARD, false)
+
+            if (state.gemsToRemove.length === 0) {
+                reject()
+            }
+
+            commit(M_ADD_MOVE)
+
             await dispatch('checkBoard', CONFIG_ANIMATION_SPEED)
-        }
 
-        commit(M_CLEANUP_BOARD_AFTER_MOVE)
+            while (getters.hasEmptyFields(state)) {
+                await dispatch('dropFields')
+                await dispatch('checkBoard', CONFIG_ANIMATION_SPEED)
+            }
 
-        if (state.gameTarget.isSatisfied({
-            'score': rootState.game.score,
-            'match-type-1': state.matchedGems[1],
-            'match-type-2': state.matchedGems[2],
-            'match-type-3': state.matchedGems[3],
-            'match-type-4': state.matchedGems[4],
-            'match-type-5': state.matchedGems[5]
-        })) {
-            dispatch('game/finishLevel', null, {root: true})
-        }
+            commit(M_CLEANUP_BOARD_AFTER_MOVE)
+
+            dispatch('game/addScore', state.pointsGained, {root: true})
+            dispatch('progress/storeScore', null, {root: true})
+
+            if (state.gameTarget.isSatisfied({
+                'score': rootState.game.score,
+                'match-type-1': state.matchedGems[1],
+                'match-type-2': state.matchedGems[2],
+                'match-type-3': state.matchedGems[3],
+                'match-type-4': state.matchedGems[4],
+                'match-type-5': state.matchedGems[5]
+            })) {
+                dispatch('game/finishLevel', null, {root: true})
+            }
+
+            if (state.gameTarget.getMovesLimit() - state.currentMove <= 0) {
+                dispatch('game/failLevel', null, {root: true})
+            }
+
+            resolve()
+        })
     },
     clickAtArea: ({ commit }, position) => {
         commit(M_CLICK_AT, position)
@@ -249,7 +307,7 @@ const wait = ms => {
 const getLvlTarget = async lvl => {
     return await import('../../levels/' + lvl)
         .then(file => {return file.default})
-        .then(json => {return GameTargetFactory(json.type, json.props)})
+        .then(json => {return GameTargetFactory(json.type, json.props, json.moves)})
         .catch(error => {
             throw new Error('Error while loading level data: ' + error)
         })
@@ -259,14 +317,15 @@ const getLvlTarget = async lvl => {
  *
  * @param type
  * @param params
+ * @param moves
  * @returns {MatchGemsGameTarget|ScoreGameTarget}
  * @constructor
  */
-const GameTargetFactory = (type, params) => {
+const GameTargetFactory = (type, params, moves) => {
     if (type === 'MatchGemsGameTarget') {
-        return new MatchGemsGameTarget(params)
+        return new MatchGemsGameTarget(params, moves)
     } else if (type === 'ScoreGameTarget') {
-        return new ScoreGameTarget(params)
+        return new ScoreGameTarget(params, moves)
     }
 
     throw new Error('No game target found')

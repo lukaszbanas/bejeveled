@@ -11,7 +11,7 @@
             <MatchedGemCounter v-if="game_type.getTargetFifth() !== null" :type="5" :matched="matched_fifth" :target="game_type.getTargetFifth()" />
         </div>
         <div class="target-score-counter-container" v-if="isScoreGameTarget">
-            <TargetScoreCounter :matched="score" :target="game_type.getScore()" />
+            <TargetScoreCounter :matched="$store.state.game.score" :target="game_type.getScore()" />
         </div>
     </div>
 </template>
@@ -49,9 +49,7 @@
 
 <style scoped lang="scss">
     .scoreboard-container {
-        margin-left: calc(33.3333333333% - 325px - 16px);
         background-position: -200px -111px;
-        width: 200px;
         height: 331px;
         padding: 5px 10px 10px;
         box-sizing: border-box;
