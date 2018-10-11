@@ -1,8 +1,8 @@
 import {GameTarget} from './GameTarget'
 
 class ScoreGameTarget extends GameTarget {
-    constructor (params) {
-        super(params)
+    constructor (params, moves) {
+        super(params, moves)
     }
 
     getScore () {
@@ -10,7 +10,7 @@ class ScoreGameTarget extends GameTarget {
     }
 
     isSatisfied(params) {
-        return params.score === this.getScore()
+        return params.score >= this.getScore()
     }
 }
 

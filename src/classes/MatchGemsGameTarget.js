@@ -1,8 +1,8 @@
 import {GameTarget} from './GameTarget'
 
 export default class MatchGemsGameTarget extends GameTarget {
-    constructor (params) {
-        super(params)
+    constructor (params, moves) {
+        super(params, moves)
     }
 
     getTargetFirst () {

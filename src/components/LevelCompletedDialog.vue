@@ -7,7 +7,7 @@
             </p>
         </div>
         <div class="mdl-dialog__actions ">
-            <button type="button" class="mdl-button">Next level</button>
+            <button type="button" class="mdl-button close" @click="progressToNextLevel">Next level</button>
             <button type="button" class="mdl-button close">Menu</button>
         </div>
     </dialog>
@@ -15,6 +15,8 @@
 
 <!--suppress JSUnresolvedVariable, JSUnresolvedFunction -->
 <script>
+    import store from '../store'
+
     export default {
         name: 'LevelCompletedDialog',
         mounted: function () {
@@ -26,6 +28,15 @@
             document.querySelector('dialog').querySelector('.close').addEventListener('click', function() {
                 dialog.close();
             });
+        },
+        methods: {
+            progressToNextLevel: () => {
+                store.dispatch('progress/save').then(
+                    () => store.dispatch('game/startNew').then(
+                        () => store.dispatch('board/setLevel', store.state.progress.level)
+                    )
+                )
+            }
         }
     }
 </script>
