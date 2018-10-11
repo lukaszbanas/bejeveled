@@ -18,6 +18,8 @@ const getters = {
 const mutations = {
     [M_START_NEW] (state) {
         state.running = true
+        state.score = 0
+        state.finished = false
     },
     [M_ADD_SCORE] (state, payload) {
         state.score += payload

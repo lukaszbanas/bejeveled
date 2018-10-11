@@ -1,18 +1,23 @@
 <template>
   <div id="app">
     <Menu v-if="isGameNotRunning === true"/>
-    <div class="game-container mdl-grid" v-if="isGameNotRunning === false">
-      <Scoreboard
-          :score="$store.state.game.score"
-          :matched_first="$store.state.board.matchedGems[1]"
-          :matched_second="$store.state.board.matchedGems[2]"
-          :matched_third="$store.state.board.matchedGems[3]"
-          :matched_fourth="$store.state.board.matchedGems[4]"
-          :matched_fifth="$store.state.board.matchedGems[5]"
-          :game_type="$store.state.board.gameTarget"
-      />
-      <Board />
-      <LevelCompletedDialog v-if="isLvlFinished" />
+    <div v-if="!isGameEnded">
+      <div class="game-container mdl-grid" v-if="isGameNotRunning === false">
+        <Scoreboard
+                :score="$store.state.progress.score"
+                :matched_first="$store.state.board.matchedGems[1]"
+                :matched_second="$store.state.board.matchedGems[2]"
+                :matched_third="$store.state.board.matchedGems[3]"
+                :matched_fourth="$store.state.board.matchedGems[4]"
+                :matched_fifth="$store.state.board.matchedGems[5]"
+                :game_type="$store.state.board.gameTarget"
+        />
+        <Board />
+        <LevelCompletedDialog v-if="isLvlFinished" />
+      </div>
+    </div>
+    <div v-if="isGameEnded">
+      Thanks for playing! You scored <span>{{ totalPoints }}</span>!
     </div>
   </div>
 </template>
@@ -32,6 +37,12 @@ export default {
       },
       isLvlFinished: () => {
           return store.state.game['finished'] === true
+      },
+      isGameEnded: () => {
+          return store.state.progress['gameEnded'] === true
+      },
+      totalPoints: () => {
+          return store.state.progress['score']
       }
   },
   components: {
