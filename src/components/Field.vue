@@ -106,13 +106,13 @@
 
     .gem {
         display: inline-block;
-        width: 57px;
-        height: 67px;
         animation-name: slide-from-up;
         animation-duration: .3s;
 
         &.gem--first {
             background-position: -536px 0;
+            width: 57px;
+            height: 67px;
         }
 
         &.gem--second {

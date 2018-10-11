@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Area from '../../classes/Area'
 import Gem from '../../classes/Gem'
-import { GameTarget, GAME_TARGET_TYPE_1 } from '../../classes/GameTarget'
+import MatchGemsGameTarget from '../../classes/MatchGemsGameTarget'
+import ScoreGameTarget from '../../classes/ScoreGameTarget'
 
 const M_GENERATE = 'generate',
     M_DROP_FIELDS = 'drop_fields',
@@ -167,9 +168,9 @@ const mutations = {
 }
 
 const actions = {
-    generate: ({ commit }) => {
+    generate: async ({ commit }) => {
         commit(M_GENERATE, {rows: 10, cols: 10})
-        commit(M_SET_GAME_TARGET, new GameTarget(GAME_TARGET_TYPE_1, {1: 10, 2: 50, 3: 30}))
+        commit(M_SET_GAME_TARGET, await getLvlTarget(1))
     },
     dropFields: async ({ commit }) => {
         commit(M_DROP_FIELDS)
@@ -180,7 +181,7 @@ const actions = {
         commit(M_REMOVE_GEMS)
 
     },
-    makeMove: async ({ commit, dispatch }, positions) => {
+    makeMove: async ({ commit, dispatch, rootState }, positions) => {
         commit(M_PREPARE_BOARD_FOR_MOVE)
         commit(M_MAKE_MOVE, positions)
         await dispatch('checkBoard')
@@ -188,10 +189,20 @@ const actions = {
         while (getters.hasEmptyFields(state)) {
             await dispatch('dropFields')
             await dispatch('checkBoard')
-
         }
 
         commit(M_CLEANUP_BOARD_AFTER_MOVE)
+
+        if (state.gameTarget.isSatisfied({
+            'score': rootState.game.score,
+            'match-type-1': state.matchedGems[1],
+            'match-type-2': state.matchedGems[2],
+            'match-type-3': state.matchedGems[3],
+            'match-type-4': state.matchedGems[4],
+            'match-type-5': state.matchedGems[5]
+        })) {
+            dispatch('game/finishLevel', null, {root: true})
+        }
     },
     clickAtArea: ({ commit }, position) => {
         commit(M_CLICK_AT, position)
@@ -205,8 +216,44 @@ const saveBoardToState = (state) => {
     }
 }
 
+/**
+ *
+ * @param ms
+ * @returns {Promise<any>}
+ */
 const wait = ms => {
     return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+/**
+ *
+ * @param lvl
+ * @returns {GameTarget}
+ */
+const getLvlTarget = async lvl => {
+    return await import('../../levels/' + lvl)
+        .then(file => {return file.default})
+        .then(json => {return GameTargetFactory(json.type, json.props)})
+        .catch(error => {
+            throw new Error('Error while loading level data: ' + error)
+        })
+}
+
+/**
+ *
+ * @param type
+ * @param params
+ * @returns {MatchGemsGameTarget|ScoreGameTarget}
+ * @constructor
+ */
+const GameTargetFactory = (type, params) => {
+    if (type === 'MatchGemsGameTarget') {
+        return new MatchGemsGameTarget(params)
+    } else if (type === 'ScoreGameTarget') {
+        return new ScoreGameTarget(params)
+    }
+
+    throw new Error('No game target found')
 }
 
 export default {

@@ -1,17 +1,16 @@
-const GAME_TARGET_TYPE_1 = 'match_gems'
-
+/* eslint-disable no-unused-vars */
 class GameTarget {
-    constructor (type, params) {
-        this.type = type
-
-        if (type === GAME_TARGET_TYPE_1) {
-            this.target = params
-        }
+    constructor (params) {
+        this.target = params
     }
 
     getTarget () {
         return this.target
     }
+
+    isSatisfied (params) {
+        throw new Error('Implementation is required');
+    }
 }
 
-export { GameTarget, GAME_TARGET_TYPE_1 }
+export { GameTarget }
