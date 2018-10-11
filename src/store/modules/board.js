@@ -13,7 +13,8 @@ const M_GENERATE = 'generate',
     M_MAKE_MOVE = 'make_move',
     M_CLICK_AT = 'click_at',
     M_SET_GAME_TARGET = 'set_game_target',
-    M_MARK_BOARD_AS_PREPARED = 'mark_board_as_prepared'
+    M_MARK_BOARD_AS_PREPARED = 'mark_board_as_prepared',
+    M_SET_LEVEL = 'set_level'
 
 const CONFIG_ANIMATION_SPEED = 200
 
@@ -33,7 +34,8 @@ const state = {
         4: 0,
         5: 0
     },
-    gameTarget: null
+    gameTarget: null,
+    currentLevel: 1
 }
 
 const getters = {
@@ -171,13 +173,23 @@ const mutations = {
     },
     [M_MARK_BOARD_AS_PREPARED] (state) {
         state.boardPrepared = true
+        state.matchedGems = {
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0,
+            5: 0
+        }
+    },
+    [M_SET_LEVEL] (state, payload) {
+        state.currentLevel = payload
     }
 }
 
 const actions = {
     generate: async ({ commit, dispatch }) => {
         commit(M_GENERATE, {rows: 10, cols: 10})
-        commit(M_SET_GAME_TARGET, await getLvlTarget(1))
+        commit(M_SET_GAME_TARGET, await getLvlTarget(state.currentLevel))
 
         await dispatch('checkBoard', 0)
 
@@ -187,6 +199,10 @@ const actions = {
         }
 
         commit(M_MARK_BOARD_AS_PREPARED)
+    },
+    setLevel: async ({ commit, dispatch }, level) => {
+        commit(M_SET_LEVEL, level)
+        dispatch('generate')
     },
     dropFields: async ({ commit }) => {
         commit(M_DROP_FIELDS)
@@ -208,6 +224,8 @@ const actions = {
         }
 
         commit(M_CLEANUP_BOARD_AFTER_MOVE)
+        dispatch('game/addScore', state.pointsGained, {root: true})
+        dispatch('progress/storeScore', null, {root: true})
 
         if (state.gameTarget.isSatisfied({
             'score': rootState.game.score,

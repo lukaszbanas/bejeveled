@@ -1,10 +1,6 @@
 {
-  "type": "MatchGemsGameTarget",
+  "type": "ScoreGameTarget",
   "props": {
-    "1": 10,
-    "2": 50,
-    "3": 30,
-    "4": 10,
-    "5": 20
+    "score": 15
   }
 }
