@@ -28,7 +28,7 @@
     .main-menu {
         width: 200px;
         height: 331px;
-        margin: 0 auto;
+        margin: calc(50vh - 331px) auto auto auto;
         background-position: 0 -391px;
         padding-top: 111px;
         box-sizing: border-box;

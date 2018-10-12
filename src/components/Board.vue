@@ -1,5 +1,5 @@
 <template>
-    <div class="fields-container mdl-cell mdl-cell--4-col">
+    <div class="fields-container mdl-cell mdl-cell--4-col" v-if="isBoardPrepared">
         <div class="fields-row" :key="'k' + row" v-for="row in $store.state.board.rows">
             <div class="fields-col sprite" :key="'c' + col" v-for="col in $store.state.board.cols">
                 <Field :key="'k' + row + 'c' + col"
@@ -13,11 +13,17 @@
 
 <script>
     import Field from './Field'
+    import store from '../store'
 
     export default {
         name: "Board",
         components: {
             Field
+        },
+        computed: {
+            isBoardPrepared: () => {
+                return store.state.board.boardPrepared
+            }
         }
     }
 </script>

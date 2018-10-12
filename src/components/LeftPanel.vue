@@ -10,7 +10,7 @@
             :game_type="$store.state.board.gameTarget"
         />
         <div class="moves-container sprite">
-            <span>Moves left: </span><span>{{ calcMovesLeft }}</span>
+            <span>Moves left: </span><span class="moves" v-bind:class="calcMovesLeft <= 3 ? 'moves-red' : ''">{{ calcMovesLeft }}</span>
         </div>
     </div>
 </template>
@@ -42,5 +42,15 @@
         background-position: 0px -201px;
         height: 50px;
         line-height: 47px;
+    }
+
+    .moves {
+        font-size: larger;
+    }
+
+    .moves-red {
+        color: #b30000;
+        font-size: large;
+        animation: vanishOut .5s alternate-reverse infinite;
     }
 </style>

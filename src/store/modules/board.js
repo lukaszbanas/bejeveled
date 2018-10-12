@@ -3,7 +3,6 @@ import Area from '../../classes/Area'
 import Gem from '../../classes/Gem'
 import MatchGemsGameTarget from '../../classes/MatchGemsGameTarget'
 import ScoreGameTarget from '../../classes/ScoreGameTarget'
-import {GameTarget} from '../../classes/GameTarget'
 
 const M_GENERATE = 'generate',
     M_DROP_FIELDS = 'drop_fields',
@@ -91,6 +90,7 @@ const mutations = {
     [M_GENERATE] (state, payload) {
         state.rows = payload.rows
         state.cols = payload.cols
+        state.boardPrepared = false
 
         for (let row = 0; row < state.rows; row++) {
             let temp = []
