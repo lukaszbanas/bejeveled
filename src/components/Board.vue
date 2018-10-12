@@ -24,20 +24,23 @@
 
 <style scoped>
     .fields-container {
-        display: inline-block;
+        display: grid;
+        grid-template-columns: repeat(10, 75px);
+        grid-template-rows: repeat(10, 75px);
+        grid-auto-flow: column;
         width: 750px;
     }
 
     .fields-row {
         height: 75px;
+        display: grid;
+        grid-template-columns: repeat(10, 75px);
     }
 
     .fields-col {
-        display: inline-block;
         width: 75px;
         height: 75px;
         background-position: -400px -36px;
-        overflow: hidden;
     }
 
     .fields-row:nth-child(odd) .fields-col:nth-child(even), .fields-row:nth-child(even) .fields-col:nth-child(odd) {

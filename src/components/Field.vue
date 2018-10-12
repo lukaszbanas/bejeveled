@@ -125,12 +125,12 @@
 
     .animation--leaving {
         animation-name: vanishOut;
-        animation-duration: .5s;
+        animation-duration: .3s;
     }
 
     .animation--go-down {
         animation-name: slide-to-down;
-        animation-duration: .2s;
+        animation-duration: .3s;
     }
 
     .animation--is-clicked {
@@ -138,13 +138,15 @@
     }
 
     @keyframes slide-from-up {
-        from {margin-top: -100px;}
-        to {margin-top: 0;}
+        0% {margin-top: -100%;}
+        80% {margin-top: 0;}
+        100% {margin-top: 0;}
     }
 
     @keyframes slide-to-down {
-        from {margin-top: 0;}
-        to {margin-top: 100px;}
+        0% {margin-top: 0;}
+        80% {margin-top: 100%;}
+        100% {margin-top: 100%;}
     }
 
     @keyframes vanishOut {
@@ -159,7 +161,7 @@
             opacity: 0;
             transform-origin: 50% 50%;
             transform: scale(2, 2);
-            filter: blur(20px);
+            filter: blur(10px);
         }
     }
 

@@ -57,10 +57,6 @@ export default {
     text-align: center;
   }
 
-  .game-container {
-    width: 100vw;
-  }
-
   .drop-shadow {
     filter: drop-shadow(2px 3px 2px #000);
   }
