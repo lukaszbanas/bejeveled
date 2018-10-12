@@ -1,47 +1,13 @@
 <template>
-  <div id="app">
-    <Menu v-if="isGameNotRunning === true"/>
-    <div v-if="!isGameCompleted && !isLvlFailed" class="game-container">
-      <div class="mdl-grid" v-if="isGameNotRunning === false">
-        <LeftPanel />
-        <Board />
-        <LevelCompletedDialog v-if="isLvlFinished" />
-      </div>
-    </div>
-    <EndGameResult :totalPoints="totalPoints" v-if="isGameCompleted || isLvlFailed"/>
-  </div>
+    <router-view />
 </template>
 
 <script>
-import Board from './components/Board'
-import Menu from './components/Menu'
-import Scoreboard from './components/Scoreboard'
-import LevelCompletedDialog from './components/LevelCompletedDialog'
-import LeftPanel from './components/LeftPanel'
-import EndGameResult from './components/EndGameResult'
-import store from './store'
-
+    import RouteGame from './components/RouteGame'
 export default {
   name: 'app',
-  computed: {
-      isGameNotRunning: () => {
-          return store.state.game['running'] === false
-      },
-      isLvlFinished: () => {
-          return store.state.game['finished'] === true && store.state.game['failed'] === false
-      },
-      isLvlFailed: () => {
-          return store.state.game['finished'] === true && store.state.game['failed'] === true
-      },
-      isGameCompleted: () => {
-          return store.state.progress['gameEnded'] === true
-      },
-      totalPoints: () => {
-          return store.state.progress['score']
-      }
-  },
   components: {
-      Board, Menu, Scoreboard, LevelCompletedDialog, LeftPanel, EndGameResult
+      RouteGame
   }
 }
 </script>
@@ -62,11 +28,12 @@ export default {
     filter: drop-shadow(2px 3px 2px #000);
   }
 
-  .game-container {
-    position: relative;
-    top: 7vh;
+  .go-back-button {
+    background-position: 0 -200px;
+    height: 51px;
+    width: 200px;;
   }
-
+  
   @keyframes slide-from-up {
     0% {margin-top: -100%;}
     80% {margin-top: 0;}

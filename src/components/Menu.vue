@@ -3,8 +3,8 @@
         <div class="mdl-cell mdl-cell--4-col mdl-cell--4-offset">
             <div class="main-menu sprite">
                 <button class="sprite mdl-button mdl-js-button" @click="startNewGame">New game</button>
-                <button class="sprite mdl-button mdl-js-button" disabled>Load game</button>
-                <button class="sprite mdl-button mdl-js-button" disabled>Highscores</button>
+                <router-link to="/load" class="sprite mdl-button mdl-js-button" tag="button">Load game</router-link>
+                <router-link to="/highscores" class="sprite mdl-button mdl-js-button" tag="button">Highscores</router-link>
             </div>
         </div>
     </div>

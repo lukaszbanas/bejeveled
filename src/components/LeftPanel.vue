@@ -34,7 +34,7 @@
 
 <style scoped lang="scss">
     .left-panel {
-        margin-left: calc(33.3333333333% - 325px - 16px);
+        margin-left: auto;
         width: 200px;
     }
 
