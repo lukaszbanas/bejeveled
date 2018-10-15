@@ -2,13 +2,17 @@ const
     M_START_NEW = 'new',
     M_ADD_SCORE = 'add_score',
     M_FINISH_LEVEL = 'finish_level',
-    M_FAIL_GAME = 'fail_game'
+    M_FAIL_GAME = 'fail_game',
+    M_SET_OAUTH = 'set_oauth',
+    M_SET_LOGGED_AS = 'set_logged_as'
 
 const state = {
     running: false,
     score: 0,
     finished: false,
-    failed: false
+    failed: false,
+    oauth: null,
+    loggedAs: null
 }
 
 const getters = {
@@ -32,6 +36,10 @@ const mutations = {
     [M_FAIL_GAME] (state) {
         state.finished = true
         state.failed = true
+    },
+    [M_SET_OAUTH] (state, payload) {
+        state.oauth = payload.token
+        state.loggedAs = payload.name
     }
 }
 
@@ -47,6 +55,9 @@ const actions = {
     },
     failLevel: ({ commit }) => {
         commit(M_FAIL_GAME)
+    },
+    setOauth: ({ commit }, payload) => {
+        commit(M_SET_OAUTH, payload)
     }
 }
 

@@ -5,12 +5,16 @@ import RouteLoadGame from './components/RouteLoadGame'
 import RouteHighscores from './components/RouteHighscores'
 import store from './store'
 import VueRouter from 'vue-router'
+import GoogleAuth from 'vue-google-oauth'
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
 
+Vue.use(GoogleAuth, { client_id: process.env.VUE_APP_GOOGLE_OAUTH_CLIENT_ID })
+Vue.googleAuth().load()
+
 const routes = [
-    { path: '/', component: RouteGame },
+    { path: '/', name: 'home', component: RouteGame },
     { path: '/load', component: RouteLoadGame },
     { path: '/highscores', component: RouteHighscores },
 ]

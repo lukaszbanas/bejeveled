@@ -1,15 +1,29 @@
 <template>
-    <router-view />
+    <div>
+        <router-view />
+    </div>
 </template>
 
 <script>
     import RouteGame from './components/RouteGame'
-export default {
-  name: 'app',
-  components: {
-      RouteGame
-  }
-}
+    import store from './store'
+
+    export default {
+      name: 'app',
+      components: {
+          RouteGame
+      },
+      beforeMount: function() {
+          if (window.localStorage) {
+              store.dispatch('game/setOauth',
+                  {
+                      name: window.localStorage.getItem('oauth_name'),
+                      token: JSON.parse(window.localStorage.getItem('oauth_token'))
+                  }
+              )
+          }
+      }
+    }
 </script>
 
 <style lang="scss">
