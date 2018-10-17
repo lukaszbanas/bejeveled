@@ -3,16 +3,15 @@ const
     M_ADD_SCORE = 'add_score',
     M_FINISH_LEVEL = 'finish_level',
     M_FAIL_GAME = 'fail_game',
-    M_SET_OAUTH = 'set_oauth',
-    M_SET_LOGGED_AS = 'set_logged_as'
+    M_LOAD = 'load',
+    M_SET_LAST_SAVE_HASH = 'set_last_save_hash'
 
 const state = {
     running: false,
     score: 0,
     finished: false,
     failed: false,
-    oauth: null,
-    loggedAs: null
+    saveHash: ''
 }
 
 const getters = {
@@ -37,9 +36,14 @@ const mutations = {
         state.finished = true
         state.failed = true
     },
-    [M_SET_OAUTH] (state, payload) {
-        state.oauth = payload.token
-        state.loggedAs = payload.name
+    [M_LOAD] (state, data) {
+        state.running = data.running
+        state.score = data.score
+        state.finished = data.finished
+        state.failed = data.failed
+    },
+    [M_SET_LAST_SAVE_HASH] (state, payload) {
+        state.saveHash = payload
     }
 }
 
@@ -53,11 +57,15 @@ const actions = {
     finishLevel: ({ commit }) => {
         commit(M_FINISH_LEVEL)
     },
-    failLevel: ({ commit }) => {
+    failLevel: ({ commit, dispatch }) => {
         commit(M_FAIL_GAME)
+        dispatch('progress/delete', null, {root: true})
     },
-    setOauth: ({ commit }, payload) => {
-        commit(M_SET_OAUTH, payload)
+    load: ({ commit }, data) => {
+        commit(M_LOAD, data)
+    },
+    setHash: ({ commit }, hash) => {
+        commit(M_SET_LAST_SAVE_HASH, hash)
     }
 }
 
