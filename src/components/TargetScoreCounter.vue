@@ -1,6 +1,6 @@
 <template>
     <div class="target-score-counter sprite drop-shadow">
-        <div class="sprite matched-gem-counter__icon"></div>
+        <div class="target-score-counter__label">matches:</div>
         <span>{{ matched > target ? target : matched }}</span>/<span>{{ target }}</span>
     </div>
 </template>
@@ -27,5 +27,11 @@
         & + .matched-gem-counter {
             margin-top: 10px
         }
+    }
+
+    .target-score-counter__label {
+        position: absolute;
+        top: -15px;
+        left: -15px;
     }
 </style>

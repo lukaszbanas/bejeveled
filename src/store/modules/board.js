@@ -3,7 +3,6 @@ import Area from '../../classes/Area'
 import Gem from '../../classes/Gem'
 import MatchGemsGameTarget from '../../classes/MatchGemsGameTarget'
 import ScoreGameTarget from '../../classes/ScoreGameTarget'
-import {GameTarget} from '../../classes/GameTarget'
 
 const M_GENERATE = 'generate',
     M_DROP_FIELDS = 'drop_fields',
@@ -15,7 +14,6 @@ const M_GENERATE = 'generate',
     M_CLICK_AT = 'click_at',
     M_SET_GAME_TARGET = 'set_game_target',
     M_MARK_BOARD_AS_PREPARED = 'mark_board_as_prepared',
-    M_SET_LEVEL = 'set_level',
     M_SET_MOVES_LIMIT = 'set_moves_limit',
     M_ADD_MOVE = 'add_move'
 
@@ -38,7 +36,6 @@ const state = {
         5: 0
     },
     gameTarget: null,
-    currentLevel: 1,
     currentMove: 0
 }
 
@@ -91,6 +88,7 @@ const mutations = {
     [M_GENERATE] (state, payload) {
         state.rows = payload.rows
         state.cols = payload.cols
+        state.boardPrepared = false
 
         for (let row = 0; row < state.rows; row++) {
             let temp = []
@@ -193,9 +191,6 @@ const mutations = {
             5: 0
         }
     },
-    [M_SET_LEVEL] (state, payload) {
-        state.currentLevel = payload
-    },
     [M_SET_MOVES_LIMIT] (state, payload) {
         state.movesLimit = payload
     },
@@ -205,9 +200,9 @@ const mutations = {
 }
 
 const actions = {
-    generate: async ({ commit, dispatch }) => {
+    generate: async ({ commit, dispatch, rootState }) => {
         commit(M_GENERATE, {rows: 10, cols: 10})
-        commit(M_SET_GAME_TARGET, await getLvlTarget(state.currentLevel))
+        commit(M_SET_GAME_TARGET, await getLvlTarget(rootState.progress.level))
 
         await dispatch('checkBoard', 0)
 
@@ -218,8 +213,7 @@ const actions = {
 
         commit(M_MARK_BOARD_AS_PREPARED)
     },
-    setLevel: async ({ commit, dispatch }, level) => {
-        commit(M_SET_LEVEL, level)
+    setLevel: async ({ dispatch }) => {
         dispatch('generate')
     },
     dropFields: async ({ commit }) => {
