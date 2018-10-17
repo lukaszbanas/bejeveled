@@ -3,7 +3,7 @@
         <div class="mdl-cell mdl-cell--4-col mdl-cell--4-offset">
             <div class="main-menu sprite">
                 <button class="sprite mdl-button mdl-js-button" @click="startNewGame">New game</button>
-                <router-link to="/load" class="sprite mdl-button mdl-js-button" v-if="logged" tag="button">Load game</router-link>
+                <button class="sprite mdl-button mdl-js-button" @click="loadGame" v-if="logged">Load game</button>
                 <router-link to="/highscores" class="sprite mdl-button mdl-js-button" tag="button">Highscores</router-link>
                 <OAuth />
             </div>
@@ -21,11 +21,17 @@
             startNewGame: () => {
                 store.dispatch('game/startNew')
                 store.dispatch('board/generate')
+            },
+            loadGame: () => {
+                store.dispatch('auth/getAuth')
+                store.dispatch('progress/load')
+                store.dispatch('game/startNew')
+                store.dispatch('board/setLevel', store.state.progress.level)
             }
         },
         computed: {
             logged: () => {
-                return store.state.game.oauth !== null
+                return store.state.auth.oauth !== null
             }
         },
         components: {

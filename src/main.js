@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
 import RouteGame from './components/RouteGame'
-import RouteLoadGame from './components/RouteLoadGame'
 import RouteHighscores from './components/RouteHighscores'
 import store from './store'
 import VueRouter from 'vue-router'
@@ -28,7 +27,6 @@ Vue.use(VueNativeSock, 'ws://localhost:3000', {
 
 const routes = [
     { path: '/', name: 'home', component: RouteGame },
-    { path: '/load', component: RouteLoadGame },
     { path: '/highscores', component: RouteHighscores },
 ]
 
