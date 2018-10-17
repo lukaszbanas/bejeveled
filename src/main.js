@@ -13,7 +13,7 @@ Vue.use(VueRouter)
 Vue.use(GoogleAuth, { client_id: process.env.VUE_APP_GOOGLE_OAUTH_CLIENT_ID })
 Vue.googleAuth().load()
 
-Vue.use(VueNativeSock, process.env.VUE_APP_SAVES_HOST, {
+Vue.use(VueNativeSock, process.env.VUE_APP_HIGHSCORE_HOST, {
     connectManually: true,
     store: store,
     format: 'json',
