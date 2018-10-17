@@ -13,7 +13,7 @@ Vue.use(VueRouter)
 Vue.use(GoogleAuth, { client_id: process.env.VUE_APP_GOOGLE_OAUTH_CLIENT_ID })
 Vue.googleAuth().load()
 
-Vue.use(VueNativeSock, 'ws://localhost:3000', {
+Vue.use(VueNativeSock, process.env.VUE_APP_SAVES_HOST, {
     connectManually: true,
     store: store,
     format: 'json',
@@ -31,7 +31,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-    routes // short for `routes: routes`
+    routes
 })
 
 new Vue({

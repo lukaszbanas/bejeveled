@@ -62,8 +62,9 @@ const actions = {
     finishLevel: ({ commit }) => {
         commit(M_FINISH_LEVEL)
     },
-    failLevel: ({ commit, dispatch }) => {
+    failLevel: ({ commit, dispatch, rootState }) => {
         commit(M_FAIL_GAME)
+        dispatch('ws/postScore', {name: rootState.auth.loggedAs !== null ? rootState.auth.loggedAs : 'Anonim', score: rootState.progress.score}, {root: true})
         dispatch('progress/delete', null, {root: true})
     },
     load: ({ commit }, data) => {
