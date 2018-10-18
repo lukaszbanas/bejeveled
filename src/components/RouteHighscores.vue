@@ -20,10 +20,12 @@
         mounted: function () {
             this.$connect()
             this.$options.sockets.onmessage = (message) => {
-                let test = JSON.parse(message.data)
+                if (typeof message !== 'undefined') {
+                    if (message.data.size !== 0) {
+                        let test = JSON.parse(message.data)
 
-                if (typeof test.scores !== 'undefined') {
-                    store.dispatch('game/setHighscores', test.scores)
+                        store.dispatch('game/setHighscores', test)
+                    }
                 }
             }
         },
