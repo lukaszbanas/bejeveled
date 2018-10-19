@@ -17,8 +17,6 @@ env:
     - FTP_ADDRESS=ftp://s45.linuxpl.com/
 install:
   - npm install
-  - npm run build
-#script: bin/travis-deploy.sh
 
 jobs:
   include:
@@ -26,5 +24,7 @@ jobs:
     script: npm run lint
   - stage: Test
     script: npm run test
+  - stage: Build
+    script: npm run build
   - stage: Deploy
     script: bin/travis-deploy.sh
