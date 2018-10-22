@@ -16,7 +16,8 @@
     </div>
     <EndGameResult 
       v-if="isGameCompleted || isLvlFailed" 
-      :total-points="totalPoints"/>
+      :total-points="totalPoints"
+    />
   </div>
 </template>
 
