@@ -14,11 +14,11 @@
           v-model="nick"
           type="text"
           name="nick"
-          maxlength="10"
+          maxlength="16"
           class="mdl-textfield__input"
         >
       </div>
-      <button @click="sendHighscore" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Send scores</button>
+      <button @click="sendHighscore" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Post highscores</button>
     </div>
   </div>
 </template>
@@ -44,12 +44,12 @@
       }
     },
     methods: {
-      sendHighscore: () => {
+      sendHighscore: function () {
         store.dispatch('ws/postScore', {
           name: this.nick,
           score: store.state.progress.score
         })
-        this.isSent = true
+        //this.isSent = true
       }
     }
   }
@@ -76,4 +76,9 @@
     .end-game-result__score {
         color: #ddc124
     }
+
+  .mdl-textfield__label {
+    top: initial;
+    bottom: -16px;
+  }
 </style>

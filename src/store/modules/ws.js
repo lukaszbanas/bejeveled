@@ -15,9 +15,11 @@ const mutations = {
   SOCKET_ONOPEN(state, event) {
     Vue.prototype.$socket = event.currentTarget
     state.socket.isConnected = true
+    debug.log('open')
   },
   SOCKET_ONCLOSE(state) {
     state.socket.isConnected = false
+    debug.log('onclose')
   },
   SOCKET_ONERROR(state, event) {
     debug.log(state, event)

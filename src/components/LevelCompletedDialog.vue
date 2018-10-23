@@ -25,6 +25,7 @@
   export default {
     name: 'LevelCompletedDialog',
     mounted: function () {
+      this.$connect()
       let dialog = document.querySelector('dialog');
       // eslint-disable-next-line no-undef
       dialogPolyfill.registerDialog(dialog);

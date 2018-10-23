@@ -17,6 +17,8 @@ Vue.use(VueNativeSock, process.env.VUE_APP_HIGHSCORE_HOST, {
     connectManually: true,
     store: store,
     format: 'json',
+    reconnection: true,
+    reconnectionDelay: 3000,
     passToStoreHandler: function (eventName, event) {
         if (!eventName.startsWith('SOCKET_')) { return }
 
