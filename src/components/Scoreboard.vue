@@ -1,50 +1,98 @@
 <template>
-    <div class="scoreboard-container sprite">
-        <div class="scoreboard sprite mdl-cell mdl-cell--4-col drop-shadow">
-            <span>{{ score }}</span>
-        </div>
-        <div class="matched-gems-counter-container" v-if="isMatchGemsGameTarget">
-            <MatchedGemCounter v-if="game_type.getTargetFirst() !== null" :type="1" :matched="matched_first" :target="game_type.getTargetFirst()" />
-            <MatchedGemCounter v-if="game_type.getTargetSecond() !== null" :type="2" :matched="matched_second" :target="game_type.getTargetSecond()" />
-            <MatchedGemCounter v-if="game_type.getTargetThird() !== null" :type="3" :matched="matched_third" :target="game_type.getTargetThird()" />
-            <MatchedGemCounter v-if="game_type.getTargetFourth() !== null" :type="4" :matched="matched_fourth" :target="game_type.getTargetFourth()" />
-            <MatchedGemCounter v-if="game_type.getTargetFifth() !== null" :type="5" :matched="matched_fifth" :target="game_type.getTargetFifth()" />
-        </div>
-        <div class="target-score-counter-container" v-if="isScoreGameTarget">
-            <TargetScoreCounter :matched="$store.state.game.score" :target="game_type.getScore()" />
-        </div>
+  <div class="scoreboard-container sprite">
+    <div class="scoreboard sprite mdl-cell mdl-cell--4-col drop-shadow">
+      <span>{{ score }}</span>
     </div>
+    <div 
+      v-if="isMatchGemsGameTarget" 
+      class="matched-gems-counter-container">
+      <MatchedGemCounter 
+        v-if="game_type.getTargetFirst() !== null" 
+        :type="1" 
+        :matched="matched_first" 
+        :target="game_type.getTargetFirst()" />
+      <MatchedGemCounter 
+        v-if="game_type.getTargetSecond() !== null" 
+        :type="2" 
+        :matched="matched_second" 
+        :target="game_type.getTargetSecond()" />
+      <MatchedGemCounter 
+        v-if="game_type.getTargetThird() !== null" 
+        :type="3" 
+        :matched="matched_third" 
+        :target="game_type.getTargetThird()" />
+      <MatchedGemCounter 
+        v-if="game_type.getTargetFourth() !== null" 
+        :type="4" 
+        :matched="matched_fourth" 
+        :target="game_type.getTargetFourth()" />
+      <MatchedGemCounter 
+        v-if="game_type.getTargetFifth() !== null" 
+        :type="5" 
+        :matched="matched_fifth" 
+        :target="game_type.getTargetFifth()" />
+    </div>
+    <div 
+      v-if="isScoreGameTarget" 
+      class="target-score-counter-container">
+      <TargetScoreCounter 
+        :matched="$store.state.game.score" 
+        :target="game_type.getScore()" />
+    </div>
+  </div>
 </template>
 
 <script>
-    import MatchGemsGameTarget from '../classes/MatchGemsGameTarget'
-    import ScoreGameTarget from '../classes/ScoreGameTarget'
-    import MatchedGemCounter from './MatchedGemCounter'
-    import TargetScoreCounter from './TargetScoreCounter'
+  import MatchGemsGameTarget from '../classes/MatchGemsGameTarget'
+  import ScoreGameTarget from '../classes/ScoreGameTarget'
+  import MatchedGemCounter from './MatchedGemCounter'
+  import TargetScoreCounter from './TargetScoreCounter'
+  import {GameTarget} from "../classes/GameTarget";
 
-    export default {
-        name: 'Scoreboard',
-        props: {
-            score: 0,
-            game_type: null,
-            matched_first: 0,
-            matched_second: 0,
-            matched_third: 0,
-            matched_fourth: 0,
-            matched_fifth: 0
-        },
-        computed: {
-            isMatchGemsGameTarget () {
-                return this.game_type !== null && this.game_type instanceof MatchGemsGameTarget
-            },
-            isScoreGameTarget () {
-                return this.game_type !== null && this.game_type instanceof ScoreGameTarget
-            }
-        },
-        components: {
-            MatchedGemCounter, TargetScoreCounter
-        }
-    }
+  export default {
+    name: 'Scoreboard',
+    components: {
+      MatchedGemCounter, TargetScoreCounter
+    },
+    props: {
+      score: {
+        type: Number,
+        default: 0
+      },
+      game_type: {
+        type: GameTarget | null,
+        default: null
+      },
+      matched_first: {
+        type: Number,
+        default: 0
+      },
+      matched_second: {
+        type: Number,
+        default: 0
+      },
+      matched_third: {
+        type: Number,
+        default: 0
+      },
+      matched_fourth: {
+        type: Number,
+        default: 0
+      },
+      matched_fifth: {
+        type: Number,
+        default: 0
+      }
+    },
+    computed: {
+      isMatchGemsGameTarget() {
+        return this.game_type !== null && this.game_type instanceof MatchGemsGameTarget
+      },
+      isScoreGameTarget() {
+        return this.game_type !== null && this.game_type instanceof ScoreGameTarget
+      }
+    },
+  }
 </script>
 
 <style scoped lang="scss">

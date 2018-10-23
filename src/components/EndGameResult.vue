@@ -1,16 +1,19 @@
 <template>
-    <div class="end-game-result sprite">
-        <span class="end-game-result__title">Thanks for playing!</span>You scored <span class="end-game-result__score">{{ totalPoints }}</span> points!
-    </div>
+  <div class="end-game-result sprite">
+    <span class="end-game-result__title">Thanks for playing!</span>You scored <span class="end-game-result__score">{{ totalPoints }}</span> points!
+  </div>
 </template>
 
 <script>
-    export default {
-        name: 'EndGameResult',
-        props: {
-            totalPoints: 0
-        }
+  export default {
+    name: 'EndGameResult',
+    props: {
+      totalPoints: {
+        type: Number,
+        default: 0
+      }
     }
+  }
 </script>
 
 <style scoped>

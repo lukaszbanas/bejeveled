@@ -1,31 +1,33 @@
 <template>
-    <div class="notifier" v-bind:class="conditionalClass">
-        <div v-if="status === 'idle'"></div>
-        <div v-if="status === 'working'">WORKING</div>
-        <div v-if="status === 'error'"><b>(!!!)</b> {{ statusMsg }}</div>
-    </div>
+  <div 
+    :class="conditionalClass" 
+    class="notifier">
+    <div v-if="status === 'idle'"/>
+    <div v-if="status === 'working'">WORKING</div>
+    <div v-if="status === 'error'"><b>(!!!)</b> {{ statusMsg }}</div>
+  </div>
 </template>
 
 <script>
-    import store from '../store'
+  import store from '../store'
 
-    export default {
-        name: 'Notifier',
-        computed: {
-            status: () => {
-                return store.state.progress.apiStatus
-            },
-            statusMsg: () => {
-                return store.state.progress.apiStatusMessage
-            },
-            conditionalClass () {
-                return {
-                    'notifier--visible': store.state.progress.apiStatus === 'working' || store.state.progress.apiStatus === 'error',
-                    'notifier--error': store.state.progress.apiStatus === 'error'
-                }
-            }
+  export default {
+    name: 'Notifier',
+    computed: {
+      status: () => {
+        return store.state.progress.apiStatus
+      },
+      statusMsg: () => {
+        return store.state.progress.apiStatusMessage
+      },
+      conditionalClass() {
+        return {
+          'notifier--visible': store.state.progress.apiStatus === 'working' || store.state.progress.apiStatus === 'error',
+          'notifier--error': store.state.progress.apiStatus === 'error'
         }
+      }
     }
+  }
 </script>
 
 <style scoped>

@@ -1,31 +1,31 @@
 <template>
-    <div>
-        <router-view />
-        <Notifier />
-    </div>
+  <div>
+    <router-view />
+    <Notifier />
+  </div>
 </template>
 
 <script>
-    import RouteGame from './components/RouteGame'
-    import Notifier from './components/Notifier'
-    import store from './store'
+  import RouteGame from './components/RouteGame'
+  import Notifier from './components/Notifier'
+  import store from './store'
 
-    export default {
-      name: 'app',
-      components: {
-          RouteGame, Notifier
-      },
-      beforeMount: function() {
-          if (window.localStorage) {
-              store.dispatch('auth/setOauth',
-                  {
-                      name: window.localStorage.getItem('oauth_name'),
-                      token: JSON.parse(window.localStorage.getItem('oauth_token'))
-                  }
-              )
+  export default {
+    name: 'App',
+    components: {
+      RouteGame, Notifier
+    },
+    beforeMount: function () {
+      if (window.localStorage) {
+        store.dispatch('auth/setOauth',
+          {
+            name: window.localStorage.getItem('oauth_name'),
+            token: JSON.parse(window.localStorage.getItem('oauth_token'))
           }
+        )
       }
     }
+  }
 </script>
 
 <style lang="scss">

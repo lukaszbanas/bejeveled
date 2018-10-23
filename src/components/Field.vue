@@ -1,75 +1,92 @@
 <template>
-    <div class="field">
-        <div class="gem sprite" v-if="this.gem !== null" v-bind:class="conditionalClass" draggable="true" @click="handleClick"></div>
-    </div>
+  <div class="field">
+    <div 
+      v-if="gem"
+      :class="conditionalClass" 
+      class="gem sprite" 
+      draggable="true" 
+      @click="handleClick"/>
+  </div>
 </template>
 
 <script>
-    import store from '../store'
-    import Gem from '../classes/Gem'
-    export default {
-        name: "Field",
-        props: {
-            gem: null,
-            position: {
-                x: 0,
-                y: 0
-            }
-        },
-        computed: {
-            conditionalClass () {
-                return {
-                    'gem--first': this.gem instanceof Gem && this.gem.getType() === 1,
-                    'gem--second': this.gem instanceof Gem && this.gem.getType() === 2,
-                    'gem--third': this.gem instanceof Gem && this.gem.getType() === 3,
-                    'gem--fourth': this.gem instanceof Gem && this.gem.getType() === 4,
-                    'gem--fifth': this.gem instanceof Gem && this.gem.getType() === 5,
-                    'animation--leaving': this.$store.getters['board/isPositionContainsGemToRemove'](this.position),
-                    'animation--go-down': this.$store.getters['board/hasGemBelow'](this.position),
-                    'animation--is-clicked': this.$store.getters['board/isClickedArea'](this.position)
-                }
-            }
-        },
-        methods: {
-            async handleClick () {
-                if (store.state.board.canMakeMove !== true ) {
-                    return
-                }
+  import store from '../store'
+  import Gem from '../classes/Gem'
 
-                if (this.$store.getters['board/hasClickedArea']) {
-                    let possibleX = [this.position.x - 1, this.position.x, this.position.x + 1],
-                        possibleY = [this.position.y - 1, this.position.y, this.position.y + 1]
-
-                    if ((possibleX.indexOf(this.$store.getters['board/getClickedArea'].x) >= 0 && this.$store.getters['board/getClickedArea'].y === this.position.y) ||
-                        (possibleY.indexOf(this.$store.getters['board/getClickedArea'].y) >= 0 && this.$store.getters['board/getClickedArea'].x === this.position.x)) {
-
-                        //clicked area is cleared ad makeMove action, store it for revert
-                        let lastClickedArea = this.$store.getters['board/getClickedArea']
-
-                        await store.dispatch('board/makeMove', {
-                            'first': this.$store.getters['board/getClickedArea'],
-                            'second': this.position
-                        }).then(
-                            async () => {
-                                //success
-                            },
-                            async () => {
-                                await store.dispatch('board/revertMove', {
-                                    'first': this.position,
-                                    'second': lastClickedArea
-                                })
-                            }
-                        )
-                    } else {
-                        store.dispatch('board/clickAtArea', null)
-                        return
-                    }
-                } else {
-                    store.dispatch('board/clickAtArea', this.position)
-                }
-            }
+  export default {
+    name: "Field",
+    props: {
+      gem: {
+        type: Gem | null,
+        default: null
+      },
+      position: {
+        type: Object,
+        default() {
+          return {
+            x: 0,
+            y: 0
+          }
         }
+      }
+    },
+    computed: {
+      hasGem: () => {
+        return (this.gem !== null)
+      },
+      conditionalClass() {
+        return {
+          'gem--first': this.gem instanceof Gem && this.gem.getType() === 1,
+          'gem--second': this.gem instanceof Gem && this.gem.getType() === 2,
+          'gem--third': this.gem instanceof Gem && this.gem.getType() === 3,
+          'gem--fourth': this.gem instanceof Gem && this.gem.getType() === 4,
+          'gem--fifth': this.gem instanceof Gem && this.gem.getType() === 5,
+          'animation--leaving': this.$store.getters['board/isPositionContainsGemToRemove'](this.position),
+          'animation--go-down': this.$store.getters['board/hasGemBelow'](this.position),
+          'animation--is-clicked': this.$store.getters['board/isClickedArea'](this.position)
+        }
+      }
+    },
+    methods: {
+      async handleClick() {
+        if (store.state.board.canMakeMove !== true) {
+          return
+        }
+
+        if (this.$store.getters['board/hasClickedArea']) {
+          let possibleX = [this.position.x - 1, this.position.x, this.position.x + 1],
+            possibleY = [this.position.y - 1, this.position.y, this.position.y + 1]
+
+          if ((possibleX.indexOf(this.$store.getters['board/getClickedArea'].x) >= 0 && this.$store.getters['board/getClickedArea'].y === this.position.y) ||
+            (possibleY.indexOf(this.$store.getters['board/getClickedArea'].y) >= 0 && this.$store.getters['board/getClickedArea'].x === this.position.x)) {
+
+            //clicked area is cleared ad makeMove action, store it for revert
+            let lastClickedArea = this.$store.getters['board/getClickedArea']
+
+            await store.dispatch('board/makeMove', {
+              'first': this.$store.getters['board/getClickedArea'],
+              'second': this.position
+            }).then(
+              async () => {
+                //success
+              },
+              async () => {
+                await store.dispatch('board/revertMove', {
+                  'first': this.position,
+                  'second': lastClickedArea
+                })
+              }
+            )
+          } else {
+            store.dispatch('board/clickAtArea', null)
+            return
+          }
+        } else {
+          store.dispatch('board/clickAtArea', this.position)
+        }
+      }
     }
+  }
 </script>
 
 <style scoped lang="scss">
