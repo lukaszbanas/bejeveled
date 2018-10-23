@@ -18,7 +18,10 @@
           class="mdl-textfield__input"
         >
       </div>
-      <button @click="sendHighscore" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Post highscores</button>
+      <button
+        class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+        @click="sendHighscore"
+      >Post highscores</button>
     </div>
   </div>
 </template>
