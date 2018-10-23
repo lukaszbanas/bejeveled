@@ -1,16 +1,58 @@
 <template>
   <div class="end-game-result sprite">
     <span class="end-game-result__title">Thanks for playing!</span>You scored <span class="end-game-result__score">{{ totalPoints }}</span> points!
+    <div
+      v-if="isSent === false"
+      class="send-results"
+    >
+      <div class="mdl-textfield mdl-js-textfield">
+        <label
+          class="mdl-textfield__label"
+          for="send-results-nick">Your name: (max 10)</label>
+        <input
+          id="send-results-nick"
+          v-model="nick"
+          type="text"
+          name="nick"
+          maxlength="16"
+          class="mdl-textfield__input"
+        >
+      </div>
+      <button
+        class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+        @click="sendHighscore"
+      >Post highscores</button>
+    </div>
   </div>
 </template>
 
 <script>
+  import store from '../store'
+
   export default {
     name: 'EndGameResult',
     props: {
       totalPoints: {
         type: Number,
         default: 0
+      },
+      isSent: {
+        type: Boolean,
+        default: false
+      }
+    },
+    data: () => {
+      return {
+        nick: (store.state.auth.loggedAs !== null) ? store.state.auth.loggedAs : 'Anonymous'
+      }
+    },
+    methods: {
+      sendHighscore: function () {
+        store.dispatch('ws/postScore', {
+          name: this.nick,
+          score: store.state.progress.score
+        })
+        //this.isSent = true
       }
     }
   }
@@ -37,4 +79,9 @@
     .end-game-result__score {
         color: #ddc124
     }
+
+  .mdl-textfield__label {
+    top: initial;
+    bottom: -16px;
+  }
 </style>
