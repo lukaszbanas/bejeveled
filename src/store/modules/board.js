@@ -238,6 +238,7 @@ const actions = {
 
       if (state.gemsToRemove.length === 0) {
         reject()
+        return;
       }
 
       commit(M_ADD_MOVE)
