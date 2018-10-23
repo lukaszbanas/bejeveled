@@ -27,7 +27,5 @@ jobs:
     script: npm run lint
   - stage: Test
     script: npm run test
-  - stage: Build
-    script: npm run build
   - stage: Deploy
     script: bin/travis-deploy.sh
