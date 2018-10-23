@@ -9,7 +9,6 @@
     "test": "echo \"todo\""
   },
   "dependencies": {
-    "blueimp-md5": "^2.10.0",
     "debug": "^4.1.0",
     "vue": "^2.5.17",
     "vue-google-oauth": "^1.0.5",
