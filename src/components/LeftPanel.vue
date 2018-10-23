@@ -1,35 +1,37 @@
 <template>
-    <div class="left-panel">
-        <Scoreboard
-            :score="$store.state.progress.score"
-            :matched_first="$store.state.board.matchedGems[1]"
-            :matched_second="$store.state.board.matchedGems[2]"
-            :matched_third="$store.state.board.matchedGems[3]"
-            :matched_fourth="$store.state.board.matchedGems[4]"
-            :matched_fifth="$store.state.board.matchedGems[5]"
-            :game_type="$store.state.board.gameTarget"
-        />
-        <div class="moves-container sprite">
-            <span>Moves left: </span><span class="moves" v-bind:class="calcMovesLeft <= 3 ? 'moves-red' : ''">{{ calcMovesLeft }}</span>
-        </div>
+  <div class="left-panel">
+    <Scoreboard
+      :score="$store.state.progress.score"
+      :matched_first="$store.state.board.matchedGems[1]"
+      :matched_second="$store.state.board.matchedGems[2]"
+      :matched_third="$store.state.board.matchedGems[3]"
+      :matched_fourth="$store.state.board.matchedGems[4]"
+      :matched_fifth="$store.state.board.matchedGems[5]"
+      :game_type="$store.state.board.gameTarget"
+    />
+    <div class="moves-container sprite">
+      <span>Moves left: </span><span 
+        :class="calcMovesLeft <= 3 ? 'moves-red' : ''" 
+        class="moves">{{ calcMovesLeft }}</span>
     </div>
+  </div>
 </template>
 
 <script>
-    import Scoreboard from './Scoreboard'
-    import store from '../store'
+  import Scoreboard from './Scoreboard'
+  import store from '../store'
 
-    export default {
-        name: 'LeftPanel',
-        components: {
-            Scoreboard
-        },
-        computed: {
-            calcMovesLeft: () => {
-                return store.getters['board/getMovesLeft']
-            }
-        }
+  export default {
+    name: 'LeftPanel',
+    components: {
+      Scoreboard
+    },
+    computed: {
+      calcMovesLeft: () => {
+        return store.getters['board/getMovesLeft']
+      }
     }
+  }
 </script>
 
 <style scoped lang="scss">

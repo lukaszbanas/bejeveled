@@ -1,18 +1,24 @@
 <template>
-    <div class="target-score-counter sprite drop-shadow">
-        <div class="target-score-counter__label">matches:</div>
-        <span>{{ matched > target ? target : matched }}</span>/<span>{{ target }}</span>
-    </div>
+  <div class="target-score-counter sprite drop-shadow">
+    <div class="target-score-counter__label">matches:</div>
+    <span>{{ matched > target ? target : matched }}</span>/<span>{{ target }}</span>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: 'TargetScoreCounter',
-        props: {
-            matched: 0,
-            target: 0
-        }
+  export default {
+    name: 'TargetScoreCounter',
+    props: {
+      matched: {
+        type: Number,
+        default: 0
+      },
+      target: {
+        type: Number,
+        default: 0
+      }
     }
+  }
 </script>
 
 <style scoped lang="scss">

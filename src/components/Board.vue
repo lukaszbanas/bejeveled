@@ -1,31 +1,40 @@
 <template>
-    <div class="fields-container mdl-cell mdl-cell--4-col" v-if="isBoardPrepared">
-        <div class="fields-row" :key="'k' + row" v-for="row in $store.state.board.rows">
-            <div class="fields-col sprite" :key="'c' + col" v-for="col in $store.state.board.cols">
-                <Field :key="'k' + row + 'c' + col"
-                       :gem="$store.state.board.board[row - 1][col - 1].getGem()"
-                       :position="{x: col - 1, y: row - 1}"
-                />
-            </div>
-        </div>
+  <div 
+    v-if="isBoardPrepared" 
+    class="fields-container mdl-cell mdl-cell--4-col">
+    <div 
+      v-for="row in $store.state.board.rows" 
+      :key="'k' + row" 
+      class="fields-row">
+      <div 
+        v-for="col in $store.state.board.cols" 
+        :key="'c' + col" 
+        class="fields-col sprite">
+        <Field 
+          :key="'k' + row + 'c' + col"
+          :gem="$store.state.board.board[row - 1][col - 1].getGem()"
+          :position="{x: col - 1, y: row - 1}"
+        />
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-    import Field from './Field'
-    import store from '../store'
+  import Field from './Field'
+  import store from '../store'
 
-    export default {
-        name: "Board",
-        components: {
-            Field
-        },
-        computed: {
-            isBoardPrepared: () => {
-                return store.state.board.boardPrepared
-            }
-        }
+  export default {
+    name: "Board",
+    components: {
+      Field
+    },
+    computed: {
+      isBoardPrepared: () => {
+        return store.state.board.boardPrepared
+      }
     }
+  }
 </script>
 
 <style scoped>
