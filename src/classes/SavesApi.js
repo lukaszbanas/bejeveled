@@ -47,4 +47,19 @@ export default class SavesApi {
       }
     })
   }
+
+  static parseRecivedData(responseObject) {
+      let json, game, hash, progress;
+
+      try {
+          json = JSON.parse(responseObject.data)
+          hash = responseObject.hash
+          game = json.data.game
+          progress = json.data.progress
+      } catch (e) {
+          //empty or wrong response from the server
+      }
+
+      return {game, hash, progress}
+  }
 }

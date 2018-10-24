@@ -99,12 +99,17 @@ const actions = {
       api.get().then(async result => {
         if (result.ok) {
           await result.json().then(compiled => {
-            let json = JSON.parse(compiled.data)
-            dispatch('game/load', json.data.game, {root: true})
-            dispatch('game/setHash', compiled.hash, {root: true})
+            let game, hash, progress
 
-            if (typeof json.data.progress !== 'undefined') {
-              commit(M_LOAD, json.data.progress)
+            ({game, hash, progress} = SavesApi.parseRecivedData(compiled))
+
+            if (typeof game !== 'undefined' && typeof hash !== 'undefined') {
+                dispatch('game/load', game, {root: true})
+                dispatch('game/setHash', hash, {root: true})
+
+                if (typeof progress !== 'undefined') {
+                    commit(M_LOAD, progress)
+                }
             }
           })
 
@@ -127,8 +132,6 @@ const actions = {
 
       api.delete().then(async result => {
         if (result.ok) {
-          alert('deleted')
-
           commit(M_SET_STATUS_IDLE)
         } else {
           commit(M_SET_STATUS_ERROR, 'cannot delete game state. Status: ' + result.status)
