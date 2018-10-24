@@ -237,6 +237,7 @@ const actions = {
       commit(M_CHECK_BOARD, false)
 
       if (state.gemsToRemove.length === 0) {
+        commit(M_CLEANUP_BOARD_AFTER_MOVE)
         reject()
         return;
       }
