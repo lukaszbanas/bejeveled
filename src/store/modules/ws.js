@@ -15,11 +15,9 @@ const mutations = {
   SOCKET_ONOPEN(state, event) {
     Vue.prototype.$socket = event.currentTarget
     state.socket.isConnected = true
-    debug.log('open')
   },
   SOCKET_ONCLOSE(state) {
     state.socket.isConnected = false
-    debug.log('onclose')
   },
   SOCKET_ONERROR(state, event) {
     debug.log(state, event)
@@ -29,8 +27,9 @@ const mutations = {
     state.socket.message = message
   },
   // mutations for reconnect methods
+  // eslint-disable-next-line
   SOCKET_RECONNECT(state, count) {
-    debug.log(state, count)
+    //silent
   },
   SOCKET_RECONNECT_ERROR(state) {
     state.socket.reconnectError = true;

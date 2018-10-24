@@ -1,10 +1,10 @@
 <template>
   <div class="field">
-    <div 
+    <div
       v-if="gem"
-      :class="conditionalClass" 
-      class="gem sprite" 
-      draggable="true" 
+      :class="conditionalClass"
+      class="gem sprite"
+      draggable="true"
       @click="handleClick"/>
   </div>
 </template>
@@ -79,7 +79,6 @@
             )
           } else {
             store.dispatch('board/clickAtArea', null)
-            return
           }
         } else {
           store.dispatch('board/clickAtArea', this.position)
