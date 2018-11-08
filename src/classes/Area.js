@@ -27,9 +27,10 @@ const fieldExists = (newX, newY, board) => {
 
 export default class Area {
 
-  constructor(position) {
+  constructor(position, pullDirection) {
     this.gem = new Gem()
     this.position = position
+    this.pullDirection = pullDirection
   }
 
   setGem(gem) {
@@ -95,5 +96,9 @@ export default class Area {
     }
 
     return matches
+  }
+
+  getPullDirection () {
+    return this.pullDirection
   }
 }

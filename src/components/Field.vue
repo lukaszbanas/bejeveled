@@ -12,6 +12,8 @@
 <script>
   import store from '../store'
   import Gem from '../classes/Gem'
+  import Area from "../classes/Area";
+  import NullArea from "../classes/NullArea";
 
   export default {
     name: "Field",
@@ -28,6 +30,13 @@
             y: 0
           }
         }
+      },
+      area: {
+        type: Area,
+        default() {
+          return {
+          }
+        }
       }
     },
     computed: {
@@ -36,6 +45,7 @@
       },
       conditionalClass() {
         return {
+          'hidden': this.area instanceof NullArea,
           'gem--first': this.gem instanceof Gem && this.gem.getType() === 1,
           'gem--second': this.gem instanceof Gem && this.gem.getType() === 2,
           'gem--third': this.gem instanceof Gem && this.gem.getType() === 3,
@@ -107,6 +117,10 @@
         display: inline-block;
         animation-name: slide-from-up;
         animation-duration: .3s;
+
+        &.hidden {
+          visibility: hidden;
+        }
 
         &.gem--first {
             background-position: -536px 0;
