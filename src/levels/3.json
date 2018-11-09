@@ -6,11 +6,13 @@
     "4": 6
   },
   "board": [
-    [{"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}],
-    [{"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}],
-    [{"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}],
-    [{"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}],
-    [{"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}],
-    [{"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}]
+    [{"pull": 8}, null,        {"pull": 8}, null,        {"pull": 8}, null,        {"pull": 8}],
+    [null,        {"pull": 7}, null,        {"pull": 7}, null,        {"pull": 7}, null],
+    [{"pull": 8}, null,        {"pull": 7}, null,        {"pull": 7}, null,        {"pull": 7}],
+    [null,        {"pull": 7}, {"pull": 8}, {"pull": 7}, {"pull": 8}, {"pull": 7}, null],
+    [{"pull": 8}, null,        {"pull": 8}, {"pull": 8}, {"pull": 8}, null,        {"pull": 7}],
+    [null,        {"pull": 7}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 7}, null],
+    [{"pull": 8}, null,        {"pull": 8}, {"pull": 8}, {"pull": 8}, null,        {"pull": 7}],
+    [null,        {"pull": 7}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 7}, null]
   ]
 }

@@ -31,6 +31,7 @@ export default class Area {
     this.gem = new Gem()
     this.position = position
     this.pullDirection = pullDirection
+    this.fallDirection = 8
   }
 
   setGem(gem) {
@@ -100,5 +101,13 @@ export default class Area {
 
   getPullDirection () {
     return this.pullDirection
+  }
+
+  setFallDirection (direction) {
+    this.fallDirection = direction
+  }
+
+  getFallDirection () {
+    return this.fallDirection
   }
 }

@@ -5,7 +5,7 @@
     "score": 15
   },
   "board": [
-    [null, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, null],
+    [null,        {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, null],
     [{"pull": 9}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 7}],
     [{"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}],
     [{"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}, {"pull": 8}],

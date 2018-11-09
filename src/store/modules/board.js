@@ -8,6 +8,7 @@ import LvlHelperClass from "../../classes/LvlHelper";
 const M_GENERATE = 'generate',
   M_DROP_FIELDS = 'drop_fields',
   M_CHECK_BOARD = 'check_board',
+  M_SET_FALL_DIRECTION = 'set_fall_direction',
   M_REMOVE_GEMS = 'remove_gems',
   M_PREPARE_BOARD_FOR_MOVE = 'prepare_board_for_move',
   M_CLEANUP_BOARD_AFTER_MOVE = 'cleanup_board_after_move',
@@ -73,16 +74,26 @@ const getters = {
       return match.x === position.x && match.y === position.y
     }) !== 'undefined'
   },
-  /**
-   *
-   * @param state
-   * @returns {function(*): boolean}
-   */
-  hasGemBelow: (state) => (position) => {
-    return typeof state.board[position.y + 1] !== 'undefined' &&
-      typeof state.board[position.y + 1][position.x] !== 'undefined' &&
-      state.board[position.y + 1][position.x].getGem() === null
+
+  gemCanFall: (state) => (position) => {
+    let direction = state.board[position.y][position.x].getFallDirection(), targetRow, targetCol;
+
+    switch (direction) {
+      case 1: targetRow = position.y + 1; targetCol = position.x - 1; break;
+      case 2: targetRow = position.y + 1; targetCol = position.x; break;
+      case 3: targetRow = position.y + 1; targetCol = position.x + 1; break;
+      case 4: targetRow = position.y; targetCol = position.x - 1; break;
+      case 6: targetRow = position.y; targetCol = position.x + 1; break;
+      case 7: targetRow = position.y - 1; targetCol = position.x - 1; break;
+      case 8: targetRow = position.y - 1; targetCol = position.x; break;
+      case 9: targetRow = position.y - 1; targetCol = position.x + 1; break;
+    }
+
+    return typeof state.board[targetRow] !== 'undefined' &&
+      typeof state.board[targetRow][targetCol] !== 'undefined' &&
+      state.board[targetRow][targetCol].getGem() === null
   },
+
   /**
    *
    * @param state
@@ -118,8 +129,8 @@ const mutations = {
     state.jsonData = payload
   },
   [M_GENERATE](state) {
-    state.rows = state.jsonData.board[0].length
-    state.cols = state.jsonData.board.length
+    state.rows = state.jsonData.board.length
+    state.cols = state.jsonData.board[0].length
     state.boardPrepared = false
 
     for (let row = 0; row < state.rows; row++) {
@@ -251,6 +262,30 @@ const mutations = {
   },
   [M_ADD_MOVE](state) {
     state.currentMove += 1
+  },
+  [M_SET_FALL_DIRECTION] (state) {
+    let row, col, targetRow, targetCol, direction
+
+    for (col = state.cols - 1; col >= 0; col--) {
+      for (row = state.rows - 1; row >= 0; row--) {
+        switch (state.board[row][col].getPullDirection()) {
+          case 1: targetRow = row + 1; targetCol = col + 1; direction = 9; break;
+          case 2: targetRow = row + 1; targetCol = col; direction = 8; break;
+          case 3: targetRow = row + 1; targetCol = col - 1; direction = 7; break;
+          case 4: targetRow = row; targetCol = col - 1; direction = 6; break;
+          case 6: targetRow = row; targetCol = col + 1; direction = 4; break;
+          case 7: targetRow = row - 1; targetCol = col - 1; direction = 3; break;
+          case 8: targetRow = row - 1; targetCol = col; direction = 2; break;
+          case 9: targetRow = row - 1; targetCol = col + 1; direction = 1; break;
+        }
+
+        if (typeof state.board[targetRow] !== 'undefined' &&
+          typeof state.board[targetRow][targetCol] !== 'undefined' &&
+          state.board[targetRow][targetCol] instanceof Area) {
+          state.board[targetRow][targetCol].setFallDirection(direction)
+        }
+      }
+    }
   }
 }
 
@@ -259,6 +294,7 @@ const actions = {
     commit(M_SET_JSON_DATA, await LvlHelper.getJsonData(rootState.progress.level))
     commit(M_GENERATE)
     commit(M_SET_GAME_TARGET, new GameTargetFactory(state.jsonData.type, state.jsonData.props, state.jsonData.moves))
+    commit(M_SET_FALL_DIRECTION)
 
     await dispatch('checkBoard', 0)
 
@@ -350,24 +386,6 @@ const saveBoardToState = (state) => {
 const wait = ms => {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
-
-// /**
-//  *
-//  * @param lvl
-//  * @returns {GameTarget}
-//  */
-// const getLvlTarget = async lvl => {
-//   return await import('../../levels/' + lvl)
-//     .then(file => {
-//       return file.default
-//     })
-//     .then(json => {
-//       return GameTargetFactory(json.type, json.props, json.moves)
-//     })
-//     .catch(error => {
-//       throw new Error('Error while loading level data: ' + error)
-//     })
-// }
 
 export default {
   namespaced: true,
