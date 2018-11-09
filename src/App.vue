@@ -49,17 +49,53 @@
     height: 51px;
     width: 200px;;
   }
-  
-  @keyframes slide-from-up {
+
+  @keyframes slide-from-1 {
+    0% {margin-bottom: -100%; margin-left: -100%;}
+    80% {margin-bottom: 0; margin-left: 0;}
+    100% {margin-bottom: 0; margin-left: 0;}
+  }
+
+  @keyframes slide-from-2 {
+    0% {margin-bottom: -100%;}
+    80% {margin-bottom: 0;}
+    100% {margin-bottom: 0;}
+  }
+
+  @keyframes slide-from-3 {
+    0% {margin-bottom: -100%; margin-right: -100%;}
+    80% {margin-bottom: 0; margin-right: 0;}
+    100% {margin-bottom: 0; margin-right: 0;}
+  }
+
+  @keyframes slide-from-4 {
+    0% {margin-left: -100%;}
+    80% {margin-left: 0;}
+    100% {margin-left: 0;}
+  }
+
+  @keyframes slide-from-6 {
+    0% {margin-right: -100%;}
+    80% {margin-right: 0;}
+    100% {margin-right: 0;}
+  }
+
+  @keyframes slide-from-7 {
+    0% {margin-top: -100%; margin-left: -100%;}
+    80% {margin-top: 0; margin-left: 0;}
+    100% {margin-top: 0; margin-left: 0;}
+  }
+
+  @keyframes slide-from-8 {
     0% {margin-top: -100%;}
     80% {margin-top: 0;}
     100% {margin-top: 0;}
   }
 
-  @keyframes slide-to-down {
-    0% {margin-top: 0;}
-    80% {margin-top: 100%;}
-    100% {margin-top: 100%;}
+  @keyframes slide-from-9 {
+    0% {margin-top: -100%; margin-right: -100%;}
+    80% {margin-top: 0; margin-right: 0;}
+    100% {margin-top: 0; margin-right: 0;}
   }
 
   @keyframes vanishOut {

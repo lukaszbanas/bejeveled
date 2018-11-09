@@ -12,6 +12,8 @@
 <script>
   import store from '../store'
   import Gem from '../classes/Gem'
+  import Area from "../classes/Area";
+  import NullArea from "../classes/NullArea";
 
   export default {
     name: "Field",
@@ -28,6 +30,13 @@
             y: 0
           }
         }
+      },
+      area: {
+        type: Area,
+        default() {
+          return {
+          }
+        }
       }
     },
     computed: {
@@ -36,14 +45,24 @@
       },
       conditionalClass() {
         return {
+          'hidden': this.area instanceof NullArea,
           'gem--first': this.gem instanceof Gem && this.gem.getType() === 1,
           'gem--second': this.gem instanceof Gem && this.gem.getType() === 2,
           'gem--third': this.gem instanceof Gem && this.gem.getType() === 3,
           'gem--fourth': this.gem instanceof Gem && this.gem.getType() === 4,
           'gem--fifth': this.gem instanceof Gem && this.gem.getType() === 5,
+
           'animation--leaving': this.$store.getters['board/isPositionContainsGemToRemove'](this.position),
-          'animation--go-down': this.$store.getters['board/hasGemBelow'](this.position),
-          'animation--is-clicked': this.$store.getters['board/isClickedArea'](this.position)
+          // 'animation--go-down': this.$store.getters['board/gemCanFall'](this.position),
+          'animation--is-clicked': this.$store.getters['board/isClickedArea'](this.position),
+          'animation--entering-direction-1': this.area.getPullDirection() === 1,
+          'animation--entering-direction-2': this.area.getPullDirection() === 2,
+          'animation--entering-direction-3': this.area.getPullDirection() === 3,
+          'animation--entering-direction-4': this.area.getPullDirection() === 4,
+          'animation--entering-direction-6': this.area.getPullDirection() === 6,
+          'animation--entering-direction-7': this.area.getPullDirection() === 7,
+          'animation--entering-direction-8': this.area.getPullDirection() === 8,
+          'animation--entering-direction-9': this.area.getPullDirection() === 9,
         }
       }
     },
@@ -105,8 +124,24 @@
 
     .gem {
         display: inline-block;
-        animation-name: slide-from-up;
         animation-duration: .3s;
+        animation-iteration-count: 1;
+
+        &.hidden {
+          visibility: hidden;
+        }
+
+        &.animation--entering-direction-7 {
+          animation-name: slide-from-7;
+        }
+
+      &.animation--entering-direction-8 {
+        animation-name: slide-from-8;
+      }
+
+      &.animation--entering-direction-9 {
+        animation-name: slide-from-9;
+      }
 
         &.gem--first {
             background-position: -536px 0;
@@ -150,6 +185,6 @@
     }
 
     .animation--is-clicked {
-        animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) infinite;
+        animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) infinite !important;
     }
 </style>

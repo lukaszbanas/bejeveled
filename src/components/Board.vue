@@ -14,6 +14,7 @@
           :key="'k' + row + 'c' + col"
           :gem="$store.state.board.board[row - 1][col - 1].getGem()"
           :position="{x: col - 1, y: row - 1}"
+          :area="$store.state.board.board[row - 1][col - 1]"
         />
       </div>
     </div>

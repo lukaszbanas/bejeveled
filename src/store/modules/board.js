@@ -1,12 +1,14 @@
 import Vue from 'vue'
 import Area from '../../classes/Area'
 import Gem from '../../classes/Gem'
-import MatchGemsGameTarget from '../../classes/MatchGemsGameTarget'
-import ScoreGameTarget from '../../classes/ScoreGameTarget'
+import NullArea from "../../classes/NullArea";
+import GameTargetFactory from "../../classes/GameTargetFactory";
+import LvlHelperClass from "../../classes/LvlHelper";
 
 const M_GENERATE = 'generate',
   M_DROP_FIELDS = 'drop_fields',
   M_CHECK_BOARD = 'check_board',
+  M_SET_FALL_DIRECTION = 'set_fall_direction',
   M_REMOVE_GEMS = 'remove_gems',
   M_PREPARE_BOARD_FOR_MOVE = 'prepare_board_for_move',
   M_CLEANUP_BOARD_AFTER_MOVE = 'cleanup_board_after_move',
@@ -15,9 +17,12 @@ const M_GENERATE = 'generate',
   M_SET_GAME_TARGET = 'set_game_target',
   M_MARK_BOARD_AS_PREPARED = 'mark_board_as_prepared',
   M_SET_MOVES_LIMIT = 'set_moves_limit',
-  M_ADD_MOVE = 'add_move'
+  M_ADD_MOVE = 'add_move',
+  M_SET_JSON_DATA = 'set_json_data'
 
 const CONFIG_ANIMATION_SPEED = 200
+
+const LvlHelper = new LvlHelperClass
 
 const state = {
   board: [],
@@ -36,10 +41,16 @@ const state = {
     5: 0
   },
   gameTarget: null,
-  currentMove: 0
+  currentMove: 0,
+  jsonData: null
 }
 
 const getters = {
+  /**
+   *
+   * @param state
+   * @returns {boolean}
+   */
   hasEmptyFields: (state) => {
     let col, row, gems = 0
 
@@ -53,19 +64,48 @@ const getters = {
 
     return gems !== (state.rows * state.cols)
   },
-  isPositionContainsGemToRemove: (state) => (position) => {
+  /**
+   *
+   * @param state
+   * @returns {function(*): boolean}
+   */
+  isPositionContainsGemToRemove: state => (position) => {
     return typeof state.gemsToRemove.find((match) => {
       return match.x === position.x && match.y === position.y
     }) !== 'undefined'
   },
-  hasGemBelow: (state) => (position) => {
-    return typeof state.board[position.y + 1] !== 'undefined' &&
-      typeof state.board[position.y + 1][position.x] !== 'undefined' &&
-      state.board[position.y + 1][position.x].getGem() === null
+
+  gemCanFall: (state) => (position) => {
+    let direction = state.board[position.y][position.x].getFallDirection(), targetRow, targetCol;
+
+    switch (direction) {
+      case 1: targetRow = position.y + 1; targetCol = position.x - 1; break;
+      case 2: targetRow = position.y + 1; targetCol = position.x; break;
+      case 3: targetRow = position.y + 1; targetCol = position.x + 1; break;
+      case 4: targetRow = position.y; targetCol = position.x - 1; break;
+      case 6: targetRow = position.y; targetCol = position.x + 1; break;
+      case 7: targetRow = position.y - 1; targetCol = position.x - 1; break;
+      case 8: targetRow = position.y - 1; targetCol = position.x; break;
+      case 9: targetRow = position.y - 1; targetCol = position.x + 1; break;
+    }
+
+    return typeof state.board[targetRow] !== 'undefined' &&
+      typeof state.board[targetRow][targetCol] !== 'undefined' &&
+      state.board[targetRow][targetCol].getGem() === null
   },
+
+  /**
+   *
+   * @param state
+   * @returns {boolean}
+   */
   hasClickedArea: (state) => {
     return state.clickedArea !== null
   },
+  /**
+   * @param state
+   * @returns {null|*}
+   */
   getClickedArea: (state) => {
     return state.clickedArea
   },
@@ -85,33 +125,59 @@ const getters = {
 }
 
 const mutations = {
-  [M_GENERATE](state, payload) {
-    state.rows = payload.rows
-    state.cols = payload.cols
+  [M_SET_JSON_DATA](state, payload) {
+    state.jsonData = payload
+  },
+  [M_GENERATE](state) {
+    state.rows = state.jsonData.board.length
+    state.cols = state.jsonData.board[0].length
     state.boardPrepared = false
 
     for (let row = 0; row < state.rows; row++) {
       let temp = []
 
       for (let col = 0; col < state.cols; col++) {
-        temp[col] = new Area({'x': col, 'y': row})
+        if (state.jsonData.board[row][col] === null) {
+          temp[col] = new NullArea({'x': col, 'y': row}, 8)
+        } else {
+          temp[col] = new Area({'x': col, 'y': row}, state.jsonData.board[row][col].pull)
+        }
       }
 
       Vue.set(state.board, row, temp)
     }
   },
   [M_DROP_FIELDS](state) {
-    let row, col, finished = false
+    let row, col, finished = false, direction = 8, gem
 
     state.emptyFields = 0
 
     while (finished === false) {
       for (col = state.cols - 1; col >= 0; col--) {
         for (row = state.rows - 1; row >= 0; row--) {
+
           if (!state.board[row][col].hasGem()) {
             if (row - 1 >= 0) {
-              state.board[row][col].setGem(state.board[row - 1][col].pullGem())
+              direction = state.board[row][col].getPullDirection();
+
+              switch (direction) {
+                case 1: gem = state.board[row + 1][col - 1].pullGem(); break
+                case 2: gem = state.board[row + 1][col].pullGem(); break
+                case 3: gem = state.board[row + 1][col + 1].pullGem(); break
+
+                case 4: gem = state.board[row][col - 1].pullGem(); break
+                case 6: gem = state.board[row][col + 1].pullGem(); break
+
+                case 7: gem = state.board[row - 1][col - 1].pullGem(); break
+                case 8: gem = state.board[row - 1][col].pullGem(); break
+                case 9: gem = state.board[row - 1][col + 1].pullGem(); break
+              }
+
+              // old drop method
+              // state.board[row][col].setGem(state.board[row - 1][col].pullGem())
+              state.board[row][col].setGem(gem)
             } else {
+              //its top row, generate new gem
               state.board[row][col].setGem(new Gem())
             }
 
@@ -196,13 +262,39 @@ const mutations = {
   },
   [M_ADD_MOVE](state) {
     state.currentMove += 1
+  },
+  [M_SET_FALL_DIRECTION] (state) {
+    let row, col, targetRow, targetCol, direction
+
+    for (col = state.cols - 1; col >= 0; col--) {
+      for (row = state.rows - 1; row >= 0; row--) {
+        switch (state.board[row][col].getPullDirection()) {
+          case 1: targetRow = row + 1; targetCol = col + 1; direction = 9; break;
+          case 2: targetRow = row + 1; targetCol = col; direction = 8; break;
+          case 3: targetRow = row + 1; targetCol = col - 1; direction = 7; break;
+          case 4: targetRow = row; targetCol = col - 1; direction = 6; break;
+          case 6: targetRow = row; targetCol = col + 1; direction = 4; break;
+          case 7: targetRow = row - 1; targetCol = col - 1; direction = 3; break;
+          case 8: targetRow = row - 1; targetCol = col; direction = 2; break;
+          case 9: targetRow = row - 1; targetCol = col + 1; direction = 1; break;
+        }
+
+        if (typeof state.board[targetRow] !== 'undefined' &&
+          typeof state.board[targetRow][targetCol] !== 'undefined' &&
+          state.board[targetRow][targetCol] instanceof Area) {
+          state.board[targetRow][targetCol].setFallDirection(direction)
+        }
+      }
+    }
   }
 }
 
 const actions = {
-  generate: async ({commit, dispatch, rootState}) => {
-    commit(M_GENERATE, {rows: 10, cols: 10})
-    commit(M_SET_GAME_TARGET, await getLvlTarget(rootState.progress.level))
+  generate: async ({commit, dispatch, rootState, state}) => {
+    commit(M_SET_JSON_DATA, await LvlHelper.getJsonData(rootState.progress.level))
+    commit(M_GENERATE)
+    commit(M_SET_GAME_TARGET, new GameTargetFactory(state.jsonData.type, state.jsonData.props, state.jsonData.moves))
+    commit(M_SET_FALL_DIRECTION)
 
     await dispatch('checkBoard', 0)
 
@@ -289,46 +381,10 @@ const saveBoardToState = (state) => {
 /**
  *
  * @param ms
- * @returns {Promise<any>}
+ * @returns {Promise<*>}
  */
 const wait = ms => {
   return new Promise(resolve => setTimeout(resolve, ms))
-}
-
-/**
- *
- * @param lvl
- * @returns {GameTarget}
- */
-const getLvlTarget = async lvl => {
-  return await import('../../levels/' + lvl)
-    .then(file => {
-      return file.default
-    })
-    .then(json => {
-      return GameTargetFactory(json.type, json.props, json.moves)
-    })
-    .catch(error => {
-      throw new Error('Error while loading level data: ' + error)
-    })
-}
-
-/**
- *
- * @param type
- * @param params
- * @param moves
- * @returns {MatchGemsGameTarget|ScoreGameTarget}
- * @constructor
- */
-const GameTargetFactory = (type, params, moves) => {
-  if (type === 'MatchGemsGameTarget') {
-    return new MatchGemsGameTarget(params, moves)
-  } else if (type === 'ScoreGameTarget') {
-    return new ScoreGameTarget(params, moves)
-  }
-
-  throw new Error('No game target found')
 }
 
 export default {
