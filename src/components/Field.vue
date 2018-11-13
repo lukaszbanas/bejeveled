@@ -131,17 +131,37 @@
           visibility: hidden;
         }
 
+        &.animation--entering-direction-1 {
+          animation-name: slide-from-1;
+        }
+
+        &.animation--entering-direction-2 {
+          animation-name: slide-from-2;
+        }
+
+        &.animation--entering-direction-3 {
+          animation-name: slide-from-3;
+        }
+
+        &.animation--entering-direction-4 {
+          animation-name: slide-from-4;
+        }
+
+        &.animation--entering-direction-6 {
+          animation-name: slide-from-6;
+        }
+
         &.animation--entering-direction-7 {
           animation-name: slide-from-7;
         }
 
-      &.animation--entering-direction-8 {
-        animation-name: slide-from-8;
-      }
+        &.animation--entering-direction-8 {
+          animation-name: slide-from-8;
+        }
 
-      &.animation--entering-direction-9 {
-        animation-name: slide-from-9;
-      }
+        &.animation--entering-direction-9 {
+          animation-name: slide-from-9;
+        }
 
         &.gem--first {
             background-position: -536px 0;
