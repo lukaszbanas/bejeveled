@@ -4,6 +4,7 @@ const
   M_FINISH_LEVEL = 'finish_level',
   M_FAIL_GAME = 'fail_game',
   M_LOAD = 'load',
+  M_END_GAME = 'end_game',
   M_SET_LAST_SAVE_HASH = 'set_last_save_hash',
   M_SET_HIGHSCORES = 'set_highscores'
 
@@ -35,8 +36,11 @@ const mutations = {
     state.finished = true
   },
   [M_FAIL_GAME](state) {
-    state.finished = true
     state.failed = true
+    state.finished = true;
+  },
+  [M_END_GAME](state) {
+    state.running = false
   },
   [M_LOAD](state, data) {
     state.running = data.running
@@ -61,6 +65,9 @@ const actions = {
   },
   finishLevel: ({commit}) => {
     commit(M_FINISH_LEVEL)
+  },
+  endGame: ({commit}) => {
+    commit(M_END_GAME)
   },
   failLevel: ({commit, dispatch}) => {
     commit(M_FAIL_GAME)
