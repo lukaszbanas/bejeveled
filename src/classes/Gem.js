@@ -5,9 +5,14 @@ const TYPE_1 = 1,
   TYPE_5 = 5
 
 class Gem {
-  constructor() {
+  constructor(forcedType = 0) {
     let types = [TYPE_1, TYPE_2, TYPE_3, TYPE_4, TYPE_5]
-    this.type = types[Math.floor(Math.random() * types.length)];
+
+    if (forcedType === 0) {
+      this.type = types[Math.floor(Math.random() * types.length)];
+    } else {
+      this.type = forcedType
+    }
   }
 
   getType() {
@@ -15,4 +20,8 @@ class Gem {
   }
 }
 
-export default Gem
+function getAllTypes () {
+  return [TYPE_1, TYPE_2, TYPE_3, TYPE_4, TYPE_5]
+}
+
+export {Gem, getAllTypes}

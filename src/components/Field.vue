@@ -11,7 +11,7 @@
 
 <script>
   import store from '../store'
-  import Gem from '../classes/Gem'
+  import {Gem} from '../classes/Gem'
   import Area from "../classes/Area";
   import NullArea from "../classes/NullArea";
 

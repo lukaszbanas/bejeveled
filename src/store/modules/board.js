@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Area from '../../classes/Area'
-import Gem from '../../classes/Gem'
+import {Gem, getAllTypes} from '../../classes/Gem'
 import NullArea from "../../classes/NullArea";
 import GameTargetFactory from "../../classes/GameTargetFactory";
 import LvlHelperClass from "../../classes/LvlHelper";
@@ -146,6 +146,8 @@ const mutations = {
 
       Vue.set(state.board, row, temp)
     }
+
+    state.boardPrepared = true
   },
   [M_DROP_FIELDS](state) {
     let row, col, finished = false, direction = 8, gem
@@ -303,6 +305,10 @@ const actions = {
       await dispatch('checkBoard', 0)
     }
 
+    for (let x=0; x<=10; x++) {
+      await dispatch('checkIfBoardHasAnyMoves')
+    }
+
     commit(M_MARK_BOARD_AS_PREPARED)
   },
   setLevel: async ({dispatch}) => {
@@ -315,7 +321,35 @@ const actions = {
     commit(M_CHECK_BOARD, true)
     await wait(animationSpeed)
     commit(M_REMOVE_GEMS)
+  },
+  checkIfBoardHasAnyMoves: async ({commit, state, dispatch}) => {
+    let col, row, hasMatch = false, virtualGem, matchesX, matchesY
 
+    for (col = state.cols - 1; col >= 0; col--) {
+      for (row = state.rows - 1; row >= 0; row--) {
+        getAllTypes().forEach(type => {
+          virtualGem = new Gem(type);
+          matchesX = state.board[row][col].getMatchInAllDirections(state.board, 'x', virtualGem)
+          matchesY = state.board[row][col].getMatchInAllDirections(state.board, 'y', virtualGem)
+
+          if ((matchesX.length + matchesY.length) >= 5) {
+            hasMatch = true
+          }
+        })
+      }
+    }
+
+    if (!hasMatch) {
+      commit(M_GENERATE)
+      await dispatch('checkBoard', 0)
+
+      while (getters.hasEmptyFields(state)) {
+        await dispatch('dropFields')
+        await dispatch('checkBoard', 0)
+      }
+
+      commit(M_MARK_BOARD_AS_PREPARED)
+    }
   },
   revertMove: ({commit}, positions) => {
     commit(M_MAKE_MOVE, positions)
@@ -342,6 +376,8 @@ const actions = {
         await dispatch('dropFields')
         await dispatch('checkBoard', CONFIG_ANIMATION_SPEED)
       }
+
+      dispatch('checkIfBoardHasAnyMoves')
 
       commit(M_CLEANUP_BOARD_AFTER_MOVE)
 
