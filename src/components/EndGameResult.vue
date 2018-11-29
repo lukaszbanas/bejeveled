@@ -22,6 +22,10 @@
         class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
         @click="sendHighscore"
       >Post highscores</button>
+      <button
+        type="button"
+        class="mdl-button mdl-js-button mdl-button--raised"
+        @click="backToMenu">Back to menu</button>
     </div>
   </div>
 </template>
@@ -54,6 +58,9 @@
         })
         //this.isSent = true
       }
+    },
+    backToMenu: () => {
+      store.dispatch('game/endGame')
     }
   }
 </script>
