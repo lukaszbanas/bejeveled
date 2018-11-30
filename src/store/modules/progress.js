@@ -74,7 +74,7 @@ const actions = {
 
       api.post({
         'hash': rootState.game.saveHash,
-        'data': {
+        'save': {
           'game': rootState.game,
           'progress': rootState.progress
         }

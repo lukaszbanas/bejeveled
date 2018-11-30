@@ -1,3 +1,5 @@
+import * as debug from 'debug'
+
 export default class SavesApi {
   /**
    * @param {string} authorizationUrl
@@ -70,11 +72,12 @@ export default class SavesApi {
       let json, game, hash, progress;
 
       try {
-          json = JSON.parse(responseObject.data)
-          hash = responseObject.hash
-          game = json.data.game
-          progress = json.data.progress
+          json = responseObject.data
+          hash = json.hash
+          game = json.save.game
+          progress = json.save.progress
       } catch (e) {
+        debug.log('load failed')
           //empty or wrong response from the server
       }
 
