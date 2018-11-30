@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :style="cssProps">
     <router-view />
     <Notifier />
   </div>
@@ -14,6 +14,11 @@
     name: 'App',
     components: {
       RouteGame, Notifier
+    },
+    computed: {
+      cssProps() { return {
+        '--animation-speed': this.$store.getters['board/getAnimationSpeed'] + 'ms'
+      }}
     },
     beforeMount: function () {
       if (window.localStorage) {

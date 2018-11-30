@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Area from '../../classes/Area'
-import Gem from '../../classes/Gem'
+import {Gem, getAllTypes} from '../../classes/Gem'
 import NullArea from "../../classes/NullArea";
 import GameTargetFactory from "../../classes/GameTargetFactory";
-import LvlHelperClass from "../../classes/LvlHelper";
+import LvlHelperClass from "../../classes/LvlHelperClass";
 
 const M_GENERATE = 'generate',
   M_DROP_FIELDS = 'drop_fields',
@@ -20,7 +20,7 @@ const M_GENERATE = 'generate',
   M_ADD_MOVE = 'add_move',
   M_SET_JSON_DATA = 'set_json_data'
 
-const CONFIG_ANIMATION_SPEED = 200
+const CONFIG_ANIMATION_SPEED = 300
 
 const LvlHelper = new LvlHelperClass
 
@@ -47,7 +47,6 @@ const state = {
 
 const getters = {
   /**
-   *
    * @param state
    * @returns {boolean}
    */
@@ -65,7 +64,6 @@ const getters = {
     return gems !== (state.rows * state.cols)
   },
   /**
-   *
    * @param state
    * @returns {function(*): boolean}
    */
@@ -121,6 +119,9 @@ const getters = {
     } catch (e) {
       return 0
     }
+  },
+  getAnimationSpeed: () => {
+    return CONFIG_ANIMATION_SPEED;
   }
 }
 
@@ -146,9 +147,11 @@ const mutations = {
 
       Vue.set(state.board, row, temp)
     }
+
+    state.boardPrepared = true
   },
   [M_DROP_FIELDS](state) {
-    let row, col, finished = false, direction = 8, gem
+    let row, col, finished = false, direction, gem
 
     state.emptyFields = 0
 
@@ -303,6 +306,10 @@ const actions = {
       await dispatch('checkBoard', 0)
     }
 
+    for (let x=0; x<=10; x++) {
+      await dispatch('checkIfBoardHasAnyMoves')
+    }
+
     commit(M_MARK_BOARD_AS_PREPARED)
   },
   setLevel: async ({dispatch}) => {
@@ -313,9 +320,37 @@ const actions = {
   },
   checkBoard: async ({commit}, animationSpeed) => {
     commit(M_CHECK_BOARD, true)
-    await wait(animationSpeed)
+    await wait(animationSpeed * .68)
     commit(M_REMOVE_GEMS)
+  },
+  checkIfBoardHasAnyMoves: async ({commit, state, dispatch}) => {
+    let col, row, hasMatch = false, virtualGem, matchesX, matchesY
 
+    for (col = state.cols - 1; col >= 0; col--) {
+      for (row = state.rows - 1; row >= 0; row--) {
+        getAllTypes().forEach(type => {
+          virtualGem = new Gem(type);
+          matchesX = state.board[row][col].getMatchInAllDirections(state.board, 'x', virtualGem)
+          matchesY = state.board[row][col].getMatchInAllDirections(state.board, 'y', virtualGem)
+
+          if ((matchesX.length + matchesY.length) >= 5) {
+            hasMatch = true
+          }
+        })
+      }
+    }
+
+    if (!hasMatch) {
+      commit(M_GENERATE)
+      await dispatch('checkBoard', 0)
+
+      while (getters.hasEmptyFields(state)) {
+        await dispatch('dropFields')
+        await dispatch('checkBoard', 0)
+      }
+
+      commit(M_MARK_BOARD_AS_PREPARED)
+    }
   },
   revertMove: ({commit}, positions) => {
     commit(M_MAKE_MOVE, positions)
@@ -342,6 +377,8 @@ const actions = {
         await dispatch('dropFields')
         await dispatch('checkBoard', CONFIG_ANIMATION_SPEED)
       }
+
+      dispatch('checkIfBoardHasAnyMoves')
 
       commit(M_CLEANUP_BOARD_AFTER_MOVE)
 

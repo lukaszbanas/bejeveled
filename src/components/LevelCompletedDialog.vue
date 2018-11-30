@@ -13,7 +13,8 @@
         @click="progressToNextLevel">Next level</button>
       <button 
         type="button" 
-        class="mdl-button close">Menu</button>
+        class="mdl-button close"
+        @click="backToMenu">Quit</button>
     </div>
   </dialog>
 </template>
@@ -42,6 +43,9 @@
             () => store.dispatch('board/setLevel', store.state.progress.level)
           )
         )
+      },
+      backToMenu: () => {
+        store.dispatch('game/endGame')
       }
     }
   }

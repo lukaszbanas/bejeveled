@@ -22,6 +22,10 @@
         class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
         @click="sendHighscore"
       >Post highscores</button>
+      <button
+        type="button"
+        class="mdl-button mdl-js-button mdl-button--raised"
+        @click="backToMenu">Back to menu</button>
     </div>
   </div>
 </template>
@@ -53,6 +57,10 @@
           score: store.state.progress.score
         })
         //this.isSent = true
+      },
+      backToMenu: () => {
+          store.dispatch('game/endGame')
+          store.dispatch('progress/restartGame')
       }
     }
   }

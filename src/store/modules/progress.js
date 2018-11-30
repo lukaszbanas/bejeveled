@@ -8,12 +8,13 @@ const
   M_SET_STATUS_IDLE = 'set_status_idle',
   M_SET_STATUS_WORKING = 'set_status_working',
   M_SET_STATUS_ERROR = 'set_status_error',
-  M_LOAD = 'load'
+  M_LOAD = 'load',
+  M_RESTART_GAME = 'restart_game'
 
 const state = {
   level: 1,
   score: 0,
-  maxLvl: 5,
+  maxLvl: process.env.VUE_APP_GAME_CONFIG_MAX_LEVL,
   gameEnded: false,
   apiStatus: 'idle',
   apiStatusMessage: ''
@@ -47,6 +48,11 @@ const mutations = {
     state.score = data.score
     state.maxLvl = data.maxLvl
     state.gameEnded = data.gameEnded
+  },
+  [M_RESTART_GAME](state) {
+    state.gameEnded = false
+    state.score = 0
+    state.level = 1
   }
 }
 
@@ -68,7 +74,7 @@ const actions = {
 
       api.post({
         'hash': rootState.game.saveHash,
-        'data': {
+        'save': {
           'game': rootState.game,
           'progress': rootState.progress
         }
@@ -142,6 +148,9 @@ const actions = {
         debug.log('API Error: ' + error)
       })
     }
+  },
+  restartGame: ({ commit }) => {
+    commit(M_RESTART_GAME)
   }
 }
 
