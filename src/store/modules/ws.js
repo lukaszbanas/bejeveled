@@ -38,7 +38,11 @@ const mutations = {
 
 const actions = {
   // eslint-disable-next-line no-empty-pattern
-  postScore: ({}, payload) => {
+  postScore: ({ state, commit }, payload) => {
+    if (state.socket.isConnected === false) {
+        commit('SOCKET_RECONNECT')
+    }
+
     Vue.prototype.$socket.send(JSON.stringify(payload))
   }
 }

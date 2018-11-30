@@ -8,7 +8,7 @@
       <div class="mdl-textfield mdl-js-textfield">
         <label
           class="mdl-textfield__label"
-          for="send-results-nick">Your name: (max 10)</label>
+          for="send-results-nick">Your name: (max 16)</label>
         <input
           id="send-results-nick"
           v-model="nick"
@@ -22,11 +22,11 @@
         class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
         @click="sendHighscore"
       >Post highscores</button>
-      <button
-        type="button"
-        class="mdl-button mdl-js-button mdl-button--raised"
-        @click="backToMenu">Back to menu</button>
     </div>
+    <button
+      type="button"
+      class="mdl-button mdl-js-button mdl-button--raised"
+      @click="backToMenu">Back to menu</button>
   </div>
 </template>
 
@@ -56,7 +56,7 @@
           name: this.nick,
           score: store.state.progress.score
         })
-        //this.isSent = true
+        this.isSent = true
       },
       backToMenu: () => {
           store.dispatch('game/endGame')
