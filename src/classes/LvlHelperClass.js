@@ -1,7 +1,6 @@
 export default class LvlHelperClass {
   /**
-   *
-   * @param lvl
+   * @param {*} lvl
    * @returns {Promise}
    */
   getJsonData = async lvl => {

@@ -1,5 +1,11 @@
 import {Gem} from './Gem'
 
+/**
+ * @param {Object[]} array
+ * @param {Object} position
+ * @returns {boolean}
+ * @TODO move to helper class
+ */
 const notContains = (array, position) => {
   let result = true, i = 0
 
@@ -13,6 +19,14 @@ const notContains = (array, position) => {
   return result
 }
 
+/**
+ * @param {number} newX
+ * @param {number} newY
+ * @param {[]} board
+ * @param {Gem} gem
+ * @returns {*|boolean}
+ * @TODO move to helper class
+ */
 const testField = (newX, newY, board, gem) => {
   return (fieldExists(newX, newY, board) &&
     board[newY][newX].getGem() !== null &&
@@ -21,38 +35,68 @@ const testField = (newX, newY, board, gem) => {
   )
 }
 
+/**
+ * @param {number} newX
+ * @param {number} newY
+ * @param {Object} board
+ * @returns {boolean}
+ * @TODO move to helper class
+ */
 const fieldExists = (newX, newY, board) => {
   return (typeof board[newY] !== 'undefined' && typeof board[newY][newX] !== 'undefined')
 }
 
 export default class Area {
-
+  /**
+   * @param {Object} position
+   * @param {number} pullDirection
+   */
   constructor(position, pullDirection) {
+    /** @type {Gem|null} */
     this.gem = new Gem()
+    /** @type {Object} */
     this.position = position
+    /** @type {number} */
     this.pullDirection = pullDirection
+    /** @type {number} */
     this.fallDirection = 8
   }
 
+  /**
+   * @param {Gem|null} gem
+   */
   setGem(gem) {
     this.gem = gem
   }
 
+  /**
+   * @returns {Gem|null}
+   */
   getGem() {
     return this.gem
   }
 
+  /**
+   * @returns {number}
+   */
   getGemType() {
     return this.gem.getType()
   }
 
+  /**
+   * Clears and returns current gem
+   * @returns {Gem}
+   */
   pullGem() {
     let gem = this.gem;
-    this.gem = null
+    this.removeGem()
 
     return gem
   }
 
+  /**
+   * @returns {boolean}
+   */
   hasGem() {
     return this.gem !== null
   }
@@ -61,6 +105,12 @@ export default class Area {
     this.gem = null
   }
 
+  /**
+   * @param {Array} board
+   * @param {string} type
+   * @param {Gem|null} gem
+   * @returns {Array}
+   */
   getMatchInAllDirections(board, type, gem = null) {
     let matches = []
 
@@ -127,6 +177,12 @@ export default class Area {
     return matches
   }
 
+  /**
+   * @param {Array} board
+   * @param {string} type
+   * @param {Gem|null} gem
+   * @returns {Array}
+   */
   getMatch(board, type, gem = null) {
     let matches = []
 
@@ -167,14 +223,23 @@ export default class Area {
     return matches
   }
 
+  /**
+   * @returns {number}
+   */
   getPullDirection () {
     return this.pullDirection
   }
 
+  /**
+   * @param {number} direction
+   */
   setFallDirection (direction) {
     this.fallDirection = direction
   }
 
+  /**
+   * @returns {number}
+   */
   getFallDirection () {
     return this.fallDirection
   }

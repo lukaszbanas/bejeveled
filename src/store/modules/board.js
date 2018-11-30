@@ -3,7 +3,7 @@ import Area from '../../classes/Area'
 import {Gem, getAllTypes} from '../../classes/Gem'
 import NullArea from "../../classes/NullArea";
 import GameTargetFactory from "../../classes/GameTargetFactory";
-import LvlHelperClass from "../../classes/LvlHelper";
+import LvlHelperClass from "../../classes/LvlHelperClass";
 
 const M_GENERATE = 'generate',
   M_DROP_FIELDS = 'drop_fields',
@@ -150,7 +150,7 @@ const mutations = {
     state.boardPrepared = true
   },
   [M_DROP_FIELDS](state) {
-    let row, col, finished = false, direction = 8, gem
+    let row, col, finished = false, direction, gem
 
     state.emptyFields = 0
 
