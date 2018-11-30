@@ -6,7 +6,8 @@ const
   M_LOAD = 'load',
   M_END_GAME = 'end_game',
   M_SET_LAST_SAVE_HASH = 'set_last_save_hash',
-  M_SET_HIGHSCORES = 'set_highscores'
+  M_SET_HIGHSCORES = 'set_highscores',
+  M_RESTART_GAME = 'm_restart_game'
 
 const state = {
   running: false,
@@ -37,7 +38,6 @@ const mutations = {
   },
   [M_FAIL_GAME](state) {
     state.failed = true
-    state.finished = true;
   },
   [M_END_GAME](state) {
     state.running = false
@@ -53,6 +53,11 @@ const mutations = {
   },
   [M_SET_HIGHSCORES](state, payload) {
     state.highscores = payload
+  },
+  [M_RESTART_GAME](state) {
+      state.failed = false
+      state.finished = false;
+      state.running = false
   }
 }
 
@@ -81,6 +86,9 @@ const actions = {
   },
   setHighscores: ({commit}, payload) => {
     commit(M_SET_HIGHSCORES, payload)
+  },
+  restartGame: ({ commit }) => {
+      commit(M_RESTART_GAME)
   }
 }
 
