@@ -1,9 +1,19 @@
+import * as debug from 'debug'
+
 export default class SavesApi {
+  /**
+   * @param {string} authorizationUrl
+   * @param {string} token
+   */
   constructor(authorizationUrl, token) {
     this.url = authorizationUrl
     this.token = 'Bearer ' + JSON.stringify(token)
   }
 
+  /**
+   * @param {*} data
+   * @returns {Promise<Response>}
+   */
   async post(data) {
     if (typeof data !== 'object') {
       data = {data}
@@ -22,6 +32,9 @@ export default class SavesApi {
     })
   }
 
+  /**
+   * @returns {Promise<Response>}
+   */
   async get() {
     return await fetch(this.url + 'saves/', {
       method: 'GET',
@@ -35,6 +48,9 @@ export default class SavesApi {
     })
   }
 
+  /**
+   * @returns {Promise<Response>}
+   */
   async delete() {
     return await fetch(this.url + 'saves/', {
       method: 'DELETE',
@@ -48,15 +64,20 @@ export default class SavesApi {
     })
   }
 
+  /**
+   * @param responseObject
+   * @returns {{game: (*|{namespaced, state, getters, actions, mutations}), hash: *, progress: (*|{namespaced, state, getters, actions, mutations}|ProgressEvent|number)}}
+   */
   static parseRecivedData(responseObject) {
       let json, game, hash, progress;
 
       try {
-          json = JSON.parse(responseObject.data)
-          hash = responseObject.hash
-          game = json.data.game
-          progress = json.data.progress
+          json = responseObject.data
+          hash = json.hash
+          game = json.save.game
+          progress = json.save.progress
       } catch (e) {
+        debug.log('load failed')
           //empty or wrong response from the server
       }
 

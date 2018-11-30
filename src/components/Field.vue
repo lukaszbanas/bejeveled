@@ -2,10 +2,16 @@
   <div class="field">
     <div
       v-if="gem"
-      :class="conditionalClass"
-      class="gem sprite"
-      draggable="true"
-      @click="handleClick"/>
+      :class="conditionalContainerClass"
+      class="gem-container"
+    >
+      <div
+        v-if="gem"
+        :class="conditionalClass"
+        class="gem sprite"
+        draggable="true"
+        @click="handleClick"/>
+    </div>
   </div>
 </template>
 
@@ -53,8 +59,7 @@
           'gem--fifth': this.gem instanceof Gem && this.gem.getType() === 5,
 
           'animation--leaving': this.$store.getters['board/isPositionContainsGemToRemove'](this.position),
-          // 'animation--go-down': this.$store.getters['board/gemCanFall'](this.position),
-          'animation--is-clicked': this.$store.getters['board/isClickedArea'](this.position),
+          // 'animation--is-clicked': this.$store.getters['board/isClickedArea'](this.position),
           'animation--entering-direction-1': this.area.getPullDirection() === 1,
           'animation--entering-direction-2': this.area.getPullDirection() === 2,
           'animation--entering-direction-3': this.area.getPullDirection() === 3,
@@ -64,7 +69,11 @@
           'animation--entering-direction-8': this.area.getPullDirection() === 8,
           'animation--entering-direction-9': this.area.getPullDirection() === 9,
         }
-      }
+      },
+      conditionalContainerClass() { return {
+          'animation--is-clicked': this.$store.getters['board/isClickedArea'](this.position),
+          'animation--leaving': this.$store.getters['board/isPositionContainsGemToRemove'](this.position),
+      }}
     },
     methods: {
       async handleClick() {
@@ -124,7 +133,7 @@
 
     .gem {
         display: inline-block;
-        animation-duration: .3s;
+        animation-duration: var(--animation-speed);
         animation-iteration-count: 1;
 
         &.hidden {

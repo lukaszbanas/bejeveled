@@ -2,10 +2,9 @@ import MatchGemsGameTarget from "./MatchGemsGameTarget";
 import ScoreGameTarget from "./ScoreGameTarget";
 
 /**
- *
- * @param type
- * @param params
- * @param moves
+ * @param {string} type
+ * @param {*} params
+ * @param {number} moves
  * @returns {MatchGemsGameTarget|ScoreGameTarget}
  * @constructor
  */

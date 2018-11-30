@@ -3,7 +3,7 @@ import Area from '../../classes/Area'
 import {Gem, getAllTypes} from '../../classes/Gem'
 import NullArea from "../../classes/NullArea";
 import GameTargetFactory from "../../classes/GameTargetFactory";
-import LvlHelperClass from "../../classes/LvlHelper";
+import LvlHelperClass from "../../classes/LvlHelperClass";
 
 const M_GENERATE = 'generate',
   M_DROP_FIELDS = 'drop_fields',
@@ -20,7 +20,7 @@ const M_GENERATE = 'generate',
   M_ADD_MOVE = 'add_move',
   M_SET_JSON_DATA = 'set_json_data'
 
-const CONFIG_ANIMATION_SPEED = 200
+const CONFIG_ANIMATION_SPEED = 300
 
 const LvlHelper = new LvlHelperClass
 
@@ -47,7 +47,6 @@ const state = {
 
 const getters = {
   /**
-   *
    * @param state
    * @returns {boolean}
    */
@@ -65,7 +64,6 @@ const getters = {
     return gems !== (state.rows * state.cols)
   },
   /**
-   *
    * @param state
    * @returns {function(*): boolean}
    */
@@ -121,6 +119,9 @@ const getters = {
     } catch (e) {
       return 0
     }
+  },
+  getAnimationSpeed: () => {
+    return CONFIG_ANIMATION_SPEED;
   }
 }
 
@@ -150,7 +151,7 @@ const mutations = {
     state.boardPrepared = true
   },
   [M_DROP_FIELDS](state) {
-    let row, col, finished = false, direction = 8, gem
+    let row, col, finished = false, direction, gem
 
     state.emptyFields = 0
 
@@ -319,7 +320,7 @@ const actions = {
   },
   checkBoard: async ({commit}, animationSpeed) => {
     commit(M_CHECK_BOARD, true)
-    await wait(animationSpeed)
+    await wait(animationSpeed * .68)
     commit(M_REMOVE_GEMS)
   },
   checkIfBoardHasAnyMoves: async ({commit, state, dispatch}) => {

@@ -1,34 +1,62 @@
 import {GameTarget} from './GameTarget'
 
 export default class MatchGemsGameTarget extends GameTarget {
+  /**
+   * @inheritDoc
+   */
   constructor(params, moves) {
     super(params, moves)
   }
 
+  /**
+   * @returns {number}
+   */
   getTargetFirst() {
     return this._getTarget(1)
   }
 
+  /**
+   * @returns {number}
+   */
   getTargetSecond() {
     return this._getTarget(2)
   }
 
+  /**
+   * @returns {number}
+   */
   getTargetThird() {
     return this._getTarget(3)
   }
 
+  /**
+   * @returns {number}
+   */
   getTargetFourth() {
     return this._getTarget(4)
   }
 
+  /**
+   * @returns {number}
+   */
   getTargetFifth() {
     return this._getTarget(5)
   }
 
+    /**
+     *
+     * @param type
+     * @returns {null|number}
+     * @private
+     */
   _getTarget(type) {
     return (typeof this.getTarget()[type] !== 'undefined' ? this.getTarget()[type] : null)
   }
 
+  /**
+   * @param {Array} params
+   * @returns {boolean}
+   */
   isSatisfied(params) {
     let result1 = false, result2 = false, result3 = false, result4 = false, result5 = false
 
