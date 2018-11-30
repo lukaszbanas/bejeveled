@@ -57,10 +57,11 @@
           score: store.state.progress.score
         })
         //this.isSent = true
+      },
+      backToMenu: () => {
+          store.dispatch('game/endGame')
+          store.dispatch('progress/restartGame')
       }
-    },
-    backToMenu: () => {
-      store.dispatch('game/endGame')
     }
   }
 </script>

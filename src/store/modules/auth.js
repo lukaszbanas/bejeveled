@@ -31,6 +31,7 @@ const actions = {
       }
 
       dispatch('setOauth', {token: googleUser.getAuthResponse(), name: googleUser.getBasicProfile().getName()})
+
     }, error => {
       debug.log('GOOGLE SERVER - SIGN-IN ERROR', error)
     })
