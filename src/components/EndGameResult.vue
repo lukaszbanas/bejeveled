@@ -59,7 +59,7 @@
         this.isSent = true
       },
       backToMenu: () => {
-          store.dispatch('game/endGame')
+          store.dispatch('game/restartGame')
           store.dispatch('progress/restartGame')
       }
     }
