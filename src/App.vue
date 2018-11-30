@@ -38,6 +38,14 @@
     background: transparent url('./assets/sprites.png') no-repeat top left;
   }
 
+  .sprite--gem {
+    display: inline-block;
+    background: url('./assets/sprites-gems.png') no-repeat;
+    overflow: hidden;
+    text-indent: -9999px;
+    text-align: left;
+  }
+
   body {
     text-align: center;
     background: url('./assets/background.png') no-repeat fixed top left;
