@@ -1,6 +1,6 @@
 <template>
-  <div 
-    :class="conditionalClass" 
+  <div
+    :class="conditionalClass"
     class="matched-gem-counter sprite drop-shadow">
     <div class="sprite matched-gem-counter__icon"/>
     <span>{{ matched > target ? target : matched }}</span>/<span>{{ target }}</span>
@@ -12,7 +12,7 @@
     name: 'MatchedGemCounter',
     props: {
       type: {
-        type: String,
+        type: String|Number,
         default: ''
       },
       matched: {
