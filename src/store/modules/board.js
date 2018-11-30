@@ -333,7 +333,7 @@ const actions = {
           matchesX = state.board[row][col].getMatchInAllDirections(state.board, 'x', virtualGem)
           matchesY = state.board[row][col].getMatchInAllDirections(state.board, 'y', virtualGem)
 
-          if ((matchesX.length + matchesY.length) >= 5) {
+          if (!(state.board[row][col] instanceof NullArea) && (matchesX.length + matchesY.length) >= 5) {
             hasMatch = true
           }
         })
