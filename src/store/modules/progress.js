@@ -81,7 +81,7 @@ const actions = {
       }).then(async result => {
         result.json().then(jsonResult => {
           if (result.ok) {
-            dispatch('game/setHash', jsonResult.data, {root: true})
+            dispatch('game/setHash', jsonResult.data.hash, {root: true})
             commit(M_SET_STATUS_IDLE)
           } else {
             commit(M_SET_STATUS_ERROR, 'cannot save game state. Status: ' + result.status)
