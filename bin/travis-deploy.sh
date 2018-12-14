@@ -10,5 +10,4 @@ abort() {
 
 #npm run build
 
-lftp -u ${FTP_USER},${FTP_PASSWORD} ${FTP_ADDRESS} \
- -e 'set ftp:ssl-allow no; mirror -c -e -R dist ~ ; exit'
+lftp -u ${FTP_USER},${FTP_PASSWORD} ${FTP_ADDRESS} -e 'set ftp:ssl-allow no; mirror -c -e -R dist ~ ; exit'
