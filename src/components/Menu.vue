@@ -57,6 +57,7 @@
         background-position: 0 -391px;
         padding-top: 111px;
         box-sizing: border-box;
+        filter: drop-shadow(1px 1px 21px black);
 
         button {
             width: 200px;

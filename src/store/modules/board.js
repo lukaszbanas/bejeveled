@@ -122,6 +122,13 @@ const getters = {
   },
   getAnimationSpeed: () => {
     return CONFIG_ANIMATION_SPEED;
+  },
+  /**
+   * @param state
+   * @returns {*[]}
+   */
+  getDimensions: (state) => {
+    return [state.rows, state.cols];
   }
 }
 

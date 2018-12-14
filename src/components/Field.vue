@@ -8,7 +8,7 @@
       <div
         v-if="gem"
         :class="conditionalClass"
-        class="gem sprite"
+        class="gem sprite sprite--gem"
         draggable="true"
         @click="handleClick"/>
     </div>
@@ -173,33 +173,33 @@
         }
 
         &.gem--first {
-            background-position: -536px 0;
-            width: 57px;
-            height: 67px;
+            background-position: 0 0;
+            width: 73px;
+            height: 73px;
         }
 
         &.gem--second {
-            background-position: -644px 0;
-            width: 50px;
-            height: 68px;
+            background-position: -76px 0;
+            width: 73px;
+            height: 73px;
         }
 
         &.gem--third {
-            background-position: -535px -67px;
-            width: 56px;
-            height: 49px;
+            background-position: 0 -73px;
+            width: 73px;
+            height: 73px;
         }
 
         &.gem--fourth {
-            background-position: -644px -69px;
-            width: 50px;
-            height: 75px;
+            background-position: -76px -74px;
+            width: 73px;
+            height: 73px;
         }
 
         &.gem--fifth {
-            background-position: -693px -143px;
-            width: 46px;
-            height: 75px;
+            background-position: 0 -150px;
+            width: 73px;
+            height: 73px;
         }
     }
 

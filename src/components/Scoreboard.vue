@@ -101,6 +101,7 @@
         height: 331px;
         padding: 5px 10px 10px;
         box-sizing: border-box;
+        filter: drop-shadow(1px 1px 21px black)
     }
 
     .scoreboard {
