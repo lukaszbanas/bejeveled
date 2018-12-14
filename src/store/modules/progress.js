@@ -14,7 +14,7 @@ const
 const state = {
   level: 1,
   score: 0,
-  maxLvl: process.env.VUE_APP_GAME_CONFIG_MAX_LEVL,
+  maxLvl: process.env.VUE_APP_GAME_CONFIG_MAX_LEVEL,
   gameEnded: false,
   apiStatus: 'idle',
   apiStatusMessage: ''

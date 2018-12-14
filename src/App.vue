@@ -17,7 +17,9 @@
     },
     computed: {
       cssProps() { return {
-        '--animation-speed': this.$store.getters['board/getAnimationSpeed'] + 'ms'
+        '--animation-speed': this.$store.getters['board/getAnimationSpeed'] + 'ms',
+        '--board-rows': this.$store.getters['board/getDimensions'][0],
+        '--board-cols': this.$store.getters['board/getDimensions'][1]
       }}
     },
     beforeMount: function () {
@@ -38,9 +40,18 @@
     background: transparent url('./assets/sprites.png') no-repeat top left;
   }
 
+  .sprite--gem {
+    display: inline-block;
+    background: url('./assets/sprites-gems.png') no-repeat;
+    overflow: hidden;
+    text-indent: -9999px;
+    text-align: left;
+    background-size: 151px;
+  }
+
   body {
     text-align: center;
-    background: url('./assets/background.png') no-repeat fixed top left;
+    background: url('./assets/bg.jpg') no-repeat fixed top left;
     background-size: cover;
     //overflow: hidden;
   }

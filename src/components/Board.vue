@@ -41,16 +41,18 @@
 <style scoped>
     .fields-container {
         display: grid;
-        grid-template-columns: repeat(10, 75px);
-        grid-template-rows: repeat(10, 75px);
+        grid-template-columns: repeat(var(--board-cols), 75px);
+        grid-template-rows: repeat(var(--board-rows), 75px);
         grid-auto-flow: column;
-        width: 750px;
+        width: calc(var(--board-cols)*75px);
+        box-shadow: black 1px 1px 21px;
+        z-index: 1;
     }
 
     .fields-row {
         height: 75px;
         display: grid;
-        grid-template-columns: repeat(10, 75px);
+        grid-template-columns: repeat(var(--board-cols), 75px);
     }
 
     .fields-col {

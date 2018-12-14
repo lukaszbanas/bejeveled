@@ -2,7 +2,7 @@
   <div
     :class="conditionalClass"
     class="matched-gem-counter sprite drop-shadow">
-    <div class="sprite matched-gem-counter__icon"/>
+    <div class="sprite sprite--gem matched-gem-counter__icon"/>
     <span>{{ matched > target ? target : matched }}</span>/<span>{{ target }}</span>
   </div>
 </template>
@@ -61,41 +61,41 @@
 
     .matched-gem-counter--first {
         .matched-gem-counter__icon{
-            background-position: -536px 0;
-            width: 57px;
-            height: 67px;
+          background-position: 0 0;
+          width: 73px;
+          height: 73px;
         }
     }
 
     .matched-gem-counter--second {
         .matched-gem-counter__icon{
-            background-position: -644px 0;
-            width: 50px;
-            height: 68px;
+          background-position: -76px 0;
+          width: 73px;
+          height: 73px;
         }
     }
 
     .matched-gem-counter--third {
         .matched-gem-counter__icon{
-            background-position: -535px -67px;
-            width: 56px;
-            height: 49px;
+          background-position: 0 -73px;
+          width: 73px;
+          height: 73px;
         }
     }
 
     .matched-gem-counter--fourth {
         .matched-gem-counter__icon{
-            background-position: -644px -69px;
-            width: 50px;
-            height: 75px;
+          background-position: -76px -74px;
+          width: 73px;
+          height: 73px;
         }
     }
 
     .matched-gem-counter--fifth {
         .matched-gem-counter__icon{
-            background-position: -693px -143px;
-            width: 46px;
-            height: 75px;
+          background-position: 0 -150px;
+          width: 73px;
+          height: 73px;
         }
     }
 

@@ -76,6 +76,7 @@ const actions = {
   },
   failLevel: ({commit, dispatch}) => {
     commit(M_FAIL_GAME)
+    commit(M_FINISH_LEVEL)
     dispatch('progress/delete', null, {root: true})
   },
   load: ({commit}, data) => {
