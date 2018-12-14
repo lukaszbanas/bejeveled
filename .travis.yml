@@ -17,10 +17,10 @@ env:
     - FTP_ADDRESS=ftp://s45.linuxpl.com/
 install:
   - npm install
-cache:
-  bundler: true
-  directories:
-  - node_modules
+#cache:
+#  bundler: true
+#  directories:
+#  - node_modules
 jobs:
   include:
 #  - stage: Js lint
