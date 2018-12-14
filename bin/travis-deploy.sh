@@ -11,5 +11,5 @@ abort() {
 npm run build
 echo "before lftp"
 lftp -u $FTP_USER,$FTP_PASSWORD ftp://s45.linuxpl.com/ \
- -e 'set ftp:ssl-allow no; mirror -c -e -R -v dist ~ ; exit'
+ -e 'set ssl:verify-certificate no;set ftp:ssl-allow no; mirror -c -e -R -v dist ~ ; exit'
 echo "after lftp"
