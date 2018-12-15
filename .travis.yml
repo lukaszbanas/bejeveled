@@ -3,7 +3,7 @@ sudo: false
 addons:
   apt:
     packages:
-    - lftp
+    - lftp-4.4.12
 os: linux
 node_js:
   - "10"
