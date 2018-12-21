@@ -20,12 +20,12 @@ install:
 cache:
   bundler: true
   directories:
-  - node_modules
+  - node_modules/
 jobs:
   include:
-  - stage: Js lint
-    script: npm run lint
-  - stage: Test
-    script: npm run test
+#  - stage: Js lint
+#    script: npm run lint
+#  - stage: Test
+#    script: npm run test
   - stage: Deploy
     script: bin/travis-deploy.sh
