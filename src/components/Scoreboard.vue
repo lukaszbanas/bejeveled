@@ -3,6 +3,14 @@
     <div class="scoreboard sprite mdl-cell mdl-cell--4-col drop-shadow">
       <span>{{ score }}</span>
     </div>
+    <transition name="show-chain">
+      <div
+        v-if="chain > 5"
+        class="scoreboard sprite mdl-cell mdl-cell--4-col drop-shadow"
+      >
+        <span>Chain: x{{ chain }}</span>
+      </div>
+    </transition>
     <div 
       v-if="isMatchGemsGameTarget" 
       class="matched-gems-counter-container">
@@ -56,6 +64,10 @@
     },
     props: {
       score: {
+        type: Number,
+        default: 0
+      },
+      chain: {
         type: Number,
         default: 0
       },

@@ -8,6 +8,7 @@
       :matched_fourth="$store.state.board.matchedGems[4]"
       :matched_fifth="$store.state.board.matchedGems[5]"
       :game_type="$store.state.board.gameTarget"
+      :chain="$store.state.board.chain"
     />
     <div class="moves-container sprite">
       <span>Moves left: </span><span 

@@ -31,6 +31,7 @@ const state = {
   boardPrepared: false,
   canMakeMove: true,
   pointsGained: 0,
+  chain: 0,
   gemsToRemove: [],
   clickedArea: null,
   matchedGems: {
@@ -212,7 +213,8 @@ const mutations = {
 
           if (matches.length > 2) {
             if (state.boardPrepared && addPoints) {
-              state.pointsGained += matches.length
+              state.chain ++
+              state.pointsGained += matches.length * state.chain
             }
 
             matches.forEach(match => {
@@ -246,9 +248,11 @@ const mutations = {
     state.emptyFields = 0
     state.canMakeMove = false
     state.clickedArea = null
+    state.chain = 0;
   },
   [M_CLEANUP_BOARD_AFTER_MOVE](state) {
     state.canMakeMove = true
+    state.chain = 0;
   },
   [M_CLICK_AT](state, payload) {
     state.clickedArea = payload
@@ -259,6 +263,7 @@ const mutations = {
   [M_MARK_BOARD_AS_PREPARED](state) {
     state.boardPrepared = true
     state.currentMove = 0
+    state.chain = 0;
     state.matchedGems = {
       1: 0,
       2: 0,
