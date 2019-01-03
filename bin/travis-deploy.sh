@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 abort() {
     local message=$1
     echo $message
