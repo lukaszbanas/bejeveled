@@ -28,4 +28,9 @@ jobs:
   - stage: Test
     script: npm run test
   - stage: Deploy
-    script: bin/travis-deploy.sh
+
+deploy:
+  provider: script
+  script: bash bin/travis-deploy.sh
+  on:
+    branch: master
