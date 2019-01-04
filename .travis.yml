@@ -27,7 +27,6 @@ jobs:
     script: npm run lint
   - stage: Test
     script: npm run test
-  - stage: Deploy
 
 deploy:
   provider: script
